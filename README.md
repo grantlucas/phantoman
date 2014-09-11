@@ -14,7 +14,7 @@ Phantoman is available via [Composer](https://getcomposer.org). Add the
 following to the `require` section of your project's `composer.json` file.
 
 ```
-"codeception/phantoman": "1.*"
+"site5/phantoman": "1.*"
 ```
 
 Then run `composer update` and `composer install` to complete the installation
