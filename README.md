@@ -42,9 +42,7 @@ is used, please set the path as shown in the configuration below.**
 
 ## Configuration
 
-Phantoman supports two configuration options, `path` and `port`. By default it
-will look for PhantomJS to be installed in `vendor/bin` and it will use `4444`
-for the web driver port as per Codeception's requirements.
+Phantoman supports two configuration options, `path` and `port`. The default PhantomJS binary location is `vendor/bin/phantomjs` . The default web driver port is `4444`
 
 All enabling and configuration is done in `codeception.yml`.
 
@@ -64,8 +62,8 @@ extensions:
         - Codeception\Extension\Phantoman
     config:
         Codeception\Extension\Phantoman:
-            path: '{path to PhantomJS}'
-            port: {port number}
+            path: '/usr/bin/phantomjs'
+            port: 4445
 ```
 
 ## Usage
