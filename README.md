@@ -64,7 +64,7 @@ extensions:
         - Codeception\Extension\Phantoman
     config:
         Codeception\Extension\Phantoman:
-            path: '{path to PhantomJS}'
+            path: '{full path to PhantomJS binary}'
             port: {port number}
 ```
 
