@@ -66,6 +66,10 @@ extensions:
         Codeception\Extension\Phantoman:
             path: '{path to PhantomJS}'
             port: {port number}
+            proxy: {address:port}
+            proxyType: {[http|socks5|none]}
+            proxyAuth: {username:password}
+            webSecurity: {true|false}
 ```
 
 ## Usage

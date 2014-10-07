@@ -15,12 +15,14 @@ use Codeception\Exception\Extension as ExtensionException;
 
 class Phantoman extends \Codeception\Platform\Extension
 {
+
     // list events to listen to
     static $events = array(
         'suite.before' => 'beforeSuite',
     );
 
     private $resource;
+
     private $pipes;
 
     public function __construct($config, $options)
@@ -71,7 +73,7 @@ class Phantoman extends \Codeception\Platform\Extension
             ['pipe', 'r'],
             ['file', $this->getLogDir() . 'phantomjs.output.txt', 'w'],
             ['file', $this->getLogDir() . 'phantomjs.errors.txt', 'a']
-            ];
+        ];
 
         $this->resource = proc_open($command, $descriptorSpec, $this->pipes, null, null, ['bypass_shell' => true]);
 
@@ -82,7 +84,7 @@ class Phantoman extends \Codeception\Platform\Extension
 
         // Wait till the server is reachable before continuing
         $max_checks = 10;
-        $checks     = 0;
+        $checks = 0;
 
         $this->write("Waiting for the PhantomJS server to be reachable");
         while (true) {
@@ -122,7 +124,7 @@ class Phantoman extends \Codeception\Platform\Extension
             for ($i = 0; $i < $max_checks; $i++) {
                 // If we're on the last loop, and it's still not shut down, just
                 // unset resource to allow the tests to finish
-                if($i == $max_checks - 1 && proc_get_status($this->resource)['running'] == true) {
+                if ($i == $max_checks - 1 && proc_get_status($this->resource)['running'] == true) {
                     $this->writeln('');
                     $this->writeln("Unable to properly shutdown PhantomJS server");
                     unset($this->resource);
@@ -151,12 +153,35 @@ class Phantoman extends \Codeception\Platform\Extension
     }
 
     /**
+     * getCommandParameters
+     *
+     * @return string
+     */
+    private function getCommandParameters()
+    {
+        $mapping = array(
+            'proxy' => '--proxy',
+            'proxyType' => '--proxy-type',
+            'proxyAuth' => '--proxy-auth',
+            'webSecurity' => '--web-security',
+            'port' => '--webdriver',
+        );
+        $params = array();
+        foreach ($this->config as $configKey => $configValue) {
+            if (!empty($mapping[$configKey])) {
+                $params[] = $mapping[$configKey] . '=' . $configValue;
+            }
+        }
+        return implode(' ', $params);
+    }
+
+    /**
      * Get PhantomJS command
      */
     private function getCommand()
     {
         $path = realpath($this->config['path']) . '/phantomjs';
-        return escapeshellarg($path) . " --webdriver=" . $this->config['port'];
+        return escapeshellarg($path) . ' ' . $this->getCommandParameters();
     }
 
     // methods that handle events
