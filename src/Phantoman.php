@@ -29,9 +29,18 @@ class Phantoman extends \Codeception\Platform\Extension
     {
         parent::__construct($config, $options);
 
-        // Set default path for PhantomJS to "vendor/bin" for if it was installed via composer
+        // Set default path for PhantomJS to "vendor/bin/phantomjs" for if it was installed via composer
         if (!isset($this->config['path'])) {
-            $this->config['path'] = "vendor/bin";
+            $this->config['path'] = "vendor/bin/phantomjs";
+        }
+
+        // If a directory was provided for the path, use old method of appending PhantomJS
+        if (is_dir(realpath($this->config['path']))) {
+            // Show warning that this is being deprecated
+            $this->writeLn("\r\n");
+            $this->writeLn("WARNING: The PhantomJS path for Phantoman is set to a directory, this is being deprecated in the future. Please update your Phantoman configuration to be the full path to PhantomJS.");
+
+            $this->config['path'] .= '/phantomjs';
         }
 
         // Set default WebDriver port
@@ -65,17 +74,18 @@ class Phantoman extends \Codeception\Platform\Extension
             return;
         }
 
+        $this->writeLn("\r\n");
         $this->writeln("Starting PhantomJS Server");
 
         $command = $this->getCommand();
 
-        $descriptorSpec = [
-            ['pipe', 'r'],
-            ['file', $this->getLogDir() . 'phantomjs.output.txt', 'w'],
-            ['file', $this->getLogDir() . 'phantomjs.errors.txt', 'a']
-        ];
+        $descriptorSpec = array(
+            array('pipe', 'r'),
+            array('file', $this->getLogDir() . 'phantomjs.output.txt', 'w'),
+            array('file', $this->getLogDir() . 'phantomjs.errors.txt', 'a')
+        );
 
-        $this->resource = proc_open($command, $descriptorSpec, $this->pipes, null, null, ['bypass_shell' => true]);
+        $this->resource = proc_open($command, $descriptorSpec, $this->pipes, null, null, array('bypass_shell' => true));
 
         if (!is_resource($this->resource) || !proc_get_status($this->resource)['running']) {
             proc_close($this->resource);
@@ -180,8 +190,7 @@ class Phantoman extends \Codeception\Platform\Extension
      */
     private function getCommand()
     {
-        $path = realpath($this->config['path']) . '/phantomjs';
-        return escapeshellarg($path) . ' ' . $this->getCommandParameters();
+        return escapeshellarg(realpath($this->config['path'])) . ' ' . $this->getCommandParameters();
     }
 
     // methods that handle events

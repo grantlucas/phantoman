@@ -14,7 +14,7 @@ Phantoman is available via [Composer](https://getcomposer.org). Add the
 following to the `require` section of your project's `composer.json` file.
 
 ```
-"site5/phantoman": "1.*"
+"site5/phantoman": "~1.0"
 ```
 
 Then run `composer update` and `composer install` to complete the installation
@@ -37,14 +37,12 @@ provided.
 **Note:** We've found that `1.9.7` is out of date and instead use `dev-master`
 for the package version.
 
-**Phantoman uses `vendor/bin` by default. If any other installation of PhantomJS
-is used, please set the path as shown in the configuration below.**
+**Phantoman uses `vendor/bin/phantomjs` by default. If any other installation of
+PhantomJS is used, please set the path as shown in the configuration below.**
 
 ## Configuration
 
-Phantoman supports two configuration options, `path` and `port`. By default it
-will look for PhantomJS to be installed in `vendor/bin` and it will use `4444`
-for the web driver port as per Codeception's requirements.
+By default Phantoman will use the path `vendor/bin/phantomjs` and port `4444`.
 
 All enabling and configuration is done in `codeception.yml`.
 
@@ -64,13 +62,38 @@ extensions:
         - Codeception\Extension\Phantoman
     config:
         Codeception\Extension\Phantoman:
-            path: '{path to PhantomJS}'
-            port: {port number}
-            proxy: {address:port}
-            proxyType: {[http|socks5|none]}
-            proxyAuth: {username:password}
-            webSecurity: {true|false}
+            path: '/usr/bin/phantomjs'
+            port: 4445
 ```
+
+### Available options
+
+Options set in the Phantoman configuration are mapped to [PhantomJS CLI
+options](http://phantomjs.org/api/command-line.html). The currently supported
+options are listed below.
+
+#### Basic
+
+- `path: {path}`
+    - Full path to the PhantomJS binary.
+    - Default: `vendor/bin/phantomjs`
+- `port: {port}`
+    - Webdriver port to start PhantomJS with.
+    - Default: `4444`
+
+#### Proxy Support
+
+- `proxy: {address:port}`
+    - Sets the proxy server.
+- `proxyType: {[http|socks5|none]}`
+    - Specifies the proxy type.
+- `proxyAuth: {username:password}`
+    - Provides authentication information for the proxy.
+
+#### Other
+
+- `webSecurity: {true|false}`
+    - Enables web security
 
 ## Usage
 
