@@ -36,7 +36,11 @@ class Phantoman extends \Codeception\Platform\Extension
 
         // If a directory was provided for the path, use old method of appending PhantomJS
         if (is_dir(realpath($this->config['path']))) {
-          $this->config['path'] .= '/phantomjs';
+            // Show warning that this is being deprecated
+            $this->writeLn("\r\n");
+            $this->writeLn("WARNING: The PhantomJS path for Phantoman is set to a directory, this is being deprecated in the future. Please update your Phantoman configuration to be the full path to PhantomJS.");
+
+            $this->config['path'] .= '/phantomjs';
         }
 
         // Set default WebDriver port
@@ -70,6 +74,7 @@ class Phantoman extends \Codeception\Platform\Extension
             return;
         }
 
+        $this->writeLn("\r\n");
         $this->writeln("Starting PhantomJS Server");
 
         $command = $this->getCommand();
@@ -78,7 +83,7 @@ class Phantoman extends \Codeception\Platform\Extension
             ['pipe', 'r'],
             ['file', $this->getLogDir() . 'phantomjs.output.txt', 'w'],
             ['file', $this->getLogDir() . 'phantomjs.errors.txt', 'a']
-        ];
+            ];
 
         $this->resource = proc_open($command, $descriptorSpec, $this->pipes, null, null, ['bypass_shell' => true]);
 
