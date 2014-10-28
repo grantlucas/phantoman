@@ -29,9 +29,14 @@ class Phantoman extends \Codeception\Platform\Extension
     {
         parent::__construct($config, $options);
 
-        // Set default path for PhantomJS to "vendor/bin" for if it was installed via composer
+        // Set default path for PhantomJS to "vendor/bin/phantomjs" for if it was installed via composer
         if (!isset($this->config['path'])) {
-            $this->config['path'] = "vendor/bin";
+            $this->config['path'] = "vendor/bin/phantomjs";
+        }
+
+        // If a directory was provided for the path, use old method of appending PhantomJS
+        if (is_dir(realpath($this->config['path']))) {
+          $this->config['path'] .= '/phantomjs';
         }
 
         // Set default WebDriver port
@@ -180,8 +185,7 @@ class Phantoman extends \Codeception\Platform\Extension
      */
     private function getCommand()
     {
-        $path = realpath($this->config['path']) . '/phantomjs';
-        return escapeshellarg($path) . ' ' . $this->getCommandParameters();
+        return escapeshellarg(realpath($this->config['path'])) . ' ' . $this->getCommandParameters();
     }
 
     // methods that handle events
