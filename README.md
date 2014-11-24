@@ -8,17 +8,11 @@ and stopping [PhantomJS](http://phantomjs.org/) when running tests.
 - Codeception 1.6.4
 - PHP 5.4
 
-## Installation
+## Installation using [Composer](https://getcomposer.org)
 
-Phantoman is available via [Composer](https://getcomposer.org). Add the
-following to the `require` section of your project's `composer.json` file.
-
+```bash
+$ composer require site5/phantoman
 ```
-"site5/phantoman": "~1.0"
-```
-
-Then run `composer update` and `composer install` to complete the installation
-process.
 
 Be sure to enable the extension in `codeception.yml` as shown in
 [configuration](#configuration) below.
@@ -101,7 +95,7 @@ Once installed and enabled, running your tests with `php codecept run` will
 automatically start the PhantomJS server and wait for it to be accessible before
 proceeding with the tests.
 
-```
+```bash
 Starting PhantomJS Server
 Waiting for the PhantomJS server to be reachable..
 PhantomJS server now accessible
@@ -109,6 +103,6 @@ PhantomJS server now accessible
 
 Once the tests are complete, PhantomJS will be shut down.
 
-```
+```bash
 Stopping PhantomJS Server
 ```
