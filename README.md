@@ -1,7 +1,7 @@
 # Phantoman
 
 [![Latest Version](https://img.shields.io/packagist/v/site5/phantoman.svg?style=flat-square)](https://packagist.org/packages/site5/phantoman)
-![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 [![Total Downloads](https://img.shields.io/packagist/dt/site5/phantoman.svg?style=flat-square)](https://packagist.org/packages/site5/phantoman)
 
 
