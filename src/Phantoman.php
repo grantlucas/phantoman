@@ -34,11 +34,6 @@ class Phantoman extends \Codeception\Platform\Extension
             $this->config['path'] = "vendor/bin/phantomjs";
         }
 
-        // Add .exe extension if running on the windows
-        if ($this->isWindows() && file_exists(realpath($this->config['path'] . '.exe'))) {
-            $this->config['path'] .= '.exe';
-        }
-
         // If a directory was provided for the path, use old method of appending PhantomJS
         if (is_dir(realpath($this->config['path']))) {
             // Show warning that this is being deprecated
@@ -46,6 +41,11 @@ class Phantoman extends \Codeception\Platform\Extension
             $this->writeLn("WARNING: The PhantomJS path for Phantoman is set to a directory, this is being deprecated in the future. Please update your Phantoman configuration to be the full path to PhantomJS.");
 
             $this->config['path'] .= '/phantomjs';
+        }
+
+        // Add .exe extension if running on the windows
+        if ($this->isWindows() && file_exists(realpath($this->config['path'] . '.exe'))) {
+            $this->config['path'] .= '.exe';
         }
 
         // Set default WebDriver port
