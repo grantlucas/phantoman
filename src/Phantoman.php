@@ -43,6 +43,11 @@ class Phantoman extends \Codeception\Platform\Extension
             $this->config['path'] .= '/phantomjs';
         }
 
+        // Add .exe extension if running on the windows
+        if ($this->isWindows() && file_exists(realpath($this->config['path'] . '.exe'))) {
+            $this->config['path'] .= '.exe';
+        }
+
         // Set default WebDriver port
         if (!isset($this->config['port'])) {
             $this->config['port'] = 4444;
@@ -191,6 +196,17 @@ class Phantoman extends \Codeception\Platform\Extension
     private function getCommand()
     {
         return escapeshellarg(realpath($this->config['path'])) . ' ' . $this->getCommandParameters();
+    }
+
+    /**
+     * Checks if the current machine is Windows.
+     *
+     * @return bool True if the machine is windows.
+     * @see http://stackoverflow.com/questions/5879043/php-script-detect-whether-running-under-linux-or-windows
+     */
+    private function isWindows()
+    {
+        return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
     }
 
     // methods that handle events
