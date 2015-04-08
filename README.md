@@ -33,9 +33,6 @@ install PhantomJS locally to your project in `vendor/bin`. Please follow the
 instructions](https://github.com/jakoch/phantomjs-installer#installation)
 provided.
 
-**Note:** We've found that `1.9.7` is out of date and instead use `dev-master`
-for the package version.
-
 **Phantoman uses `vendor/bin/phantomjs` by default. If any other installation of
 PhantomJS is used, please set the path as shown in the configuration below.**
 
