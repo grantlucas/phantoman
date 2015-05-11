@@ -185,6 +185,10 @@ class Phantoman extends \Codeception\Platform\Extension
         $params = array();
         foreach ($this->config as $configKey => $configValue) {
             if (!empty($mapping[$configKey])) {
+                if (is_bool($configValue)) {
+                    // Make sure the value is true/false and not 1/0
+                    $configValue = ($configValue) ? 'true' : 'false';
+                }
                 $params[] = $mapping[$configKey] . '=' . $configValue;
             }
         }
