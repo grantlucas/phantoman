@@ -90,6 +90,8 @@ options are listed below.
 
 - `webSecurity: {true|false}`
     - Enables web security
+- `ignoreSslErrors: {true|false}`
+    - Ignores errors in the SSL validation.
 
 ## Usage
 
