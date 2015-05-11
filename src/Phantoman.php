@@ -180,6 +180,7 @@ class Phantoman extends \Codeception\Platform\Extension
             'proxyAuth' => '--proxy-auth',
             'webSecurity' => '--web-security',
             'port' => '--webdriver',
+            'ignoreSslErrors' => '--ignore-ssl-errors',
         );
         $params = array();
         foreach ($this->config as $configKey => $configValue) {
