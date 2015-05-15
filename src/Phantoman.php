@@ -125,11 +125,6 @@ class Phantoman extends \Codeception\Platform\Extension
         if ($this->resource !== null) {
             $this->write("Stopping PhantomJS Server");
 
-            $pid = proc_get_status($this->resource)['pid'];
-            if (function_exists('posix_getppid')) {
-                $pid = posix_getpgid($pid);
-            }
-
             // Wait till the server has been stopped
             $max_checks = 10;
             for ($i = 0; $i < $max_checks; $i++) {
@@ -158,7 +153,7 @@ class Phantoman extends \Codeception\Platform\Extension
                     fclose($pipe);
                 }
 
-                posix_kill($pid, 15);
+                posix_kill(proc_get_status($this->resource)['pid'], 15);
 
                 $this->write('.');
 
