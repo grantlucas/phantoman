@@ -54,15 +54,6 @@ class Phantoman extends \Codeception\Platform\Extension
         }
 
         $this->startServer();
-
-        $resource = $this->resource;
-        register_shutdown_function(
-            function () use ($resource) {
-                if (is_resource($resource)) {
-                    proc_terminate($resource);
-                }
-            }
-        );
     }
 
     public function __destruct()
@@ -134,6 +125,11 @@ class Phantoman extends \Codeception\Platform\Extension
         if ($this->resource !== null) {
             $this->write("Stopping PhantomJS Server");
 
+            $pid = proc_get_status($this->resource)['pid'];
+            if (function_exists('posix_getppid')) {
+                $pid = posix_getpgid($pid);
+            }
+
             // Wait till the server has been stopped
             $max_checks = 10;
             for ($i = 0; $i < $max_checks; $i++) {
@@ -155,9 +151,14 @@ class Phantoman extends \Codeception\Platform\Extension
                 }
 
                 foreach ($this->pipes as $pipe) {
+                    if (!is_resource($pipe)) {
+                        // The pipe can be closed in a previous attempt
+                        continue;
+                    }
                     fclose($pipe);
                 }
-                proc_terminate($this->resource, 2);
+
+                posix_kill($pid, 15);
 
                 $this->write('.');
 
