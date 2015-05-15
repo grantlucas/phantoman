@@ -54,15 +54,6 @@ class Phantoman extends \Codeception\Platform\Extension
         }
 
         $this->startServer();
-
-        $resource = $this->resource;
-        register_shutdown_function(
-            function () use ($resource) {
-                if (is_resource($resource)) {
-                    proc_terminate($resource);
-                }
-            }
-        );
     }
 
     public function __destruct()
@@ -155,9 +146,14 @@ class Phantoman extends \Codeception\Platform\Extension
                 }
 
                 foreach ($this->pipes as $pipe) {
+                    if (!is_resource($pipe)) {
+                        // The pipe can be closed in a previous attempt
+                        continue;
+                    }
                     fclose($pipe);
                 }
-                proc_terminate($this->resource, 2);
+
+                posix_kill(proc_get_status($this->resource)['pid'], 15);
 
                 $this->write('.');
 
