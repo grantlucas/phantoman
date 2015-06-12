@@ -15,7 +15,6 @@ use Codeception\Exception\Extension as ExtensionException;
 
 class Phantoman extends \Codeception\Platform\Extension
 {
-
     // list events to listen to
     static $events = array(
         'suite.before' => 'beforeSuite',
@@ -154,10 +153,10 @@ class Phantoman extends \Codeception\Platform\Extension
                     break;
                 }
 
-                foreach ($this->pipes as $pipe) {
-                    fclose($pipe);
+                // If the process is running, attempt to kill it
+                if (proc_get_status($this->resource)['running'] == true) {
+                    $this->killProcess(proc_get_status($this->resource)['pid']);
                 }
-                proc_terminate($this->resource, 2);
 
                 $this->write('.');
 
@@ -212,6 +211,29 @@ class Phantoman extends \Codeception\Platform\Extension
     private function isWindows()
     {
         return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+    }
+
+    /**
+     * Kill Process
+     *
+     * proc_terminate doesn't reliably kill child processes
+     *
+     * @param int $pid The PID of the process to kill
+     */
+    private function killProcess($pid)
+    {
+        $pid = escapeshellarg($pid);
+
+        // Close all pipes first
+        foreach ($this->pipes as $pipe) {
+            fclose($pipe);
+        }
+
+        if ($this->isWindows()) {
+            exec("taskkill /f /t /pid " . $pid);
+        } else {
+            exec("kill -9 " . $pid);
+        }
     }
 
     // methods that handle events
