@@ -181,7 +181,8 @@ class Phantoman extends \Codeception\Platform\Extension
             'webSecurity' => '--web-security',
             'port' => '--webdriver',
             'ignoreSslErrors' => '--ignore-ssl-errors',
-            'sslProtocol' => '--ssl-protocol'
+            'sslProtocol' => '--ssl-protocol',
+            'remoteDebuggerPort' => '--remote-debugger-port'
         );
         $params = array();
         foreach ($this->config as $configKey => $configValue) {
