@@ -83,7 +83,7 @@ class Phantoman extends \Codeception\Platform\Extension
         $this->writeln("Starting PhantomJS Server");
 
         $command = $this->getCommand();
-
+        
         $descriptorSpec = array(
             array('pipe', 'r'),
             array('file', $this->getLogDir() . 'phantomjs.output.txt', 'w'),
@@ -100,7 +100,7 @@ class Phantoman extends \Codeception\Platform\Extension
         // Wait till the server is reachable before continuing
         $max_checks = 10;
         $checks = 0;
-
+        
         $this->write("Waiting for the PhantomJS server to be reachable");
         while (true) {
             if ($checks >= $max_checks) {
@@ -181,6 +181,8 @@ class Phantoman extends \Codeception\Platform\Extension
             'webSecurity' => '--web-security',
             'port' => '--webdriver',
             'ignoreSslErrors' => '--ignore-ssl-errors',
+            'sslProtocol' => '--ssl-protocol',
+            'remoteDebuggerPort' => '--remote-debugger-port'
         );
         $params = array();
         foreach ($this->config as $configKey => $configValue) {
