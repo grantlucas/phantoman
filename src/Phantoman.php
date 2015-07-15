@@ -84,9 +84,6 @@ class Phantoman extends \Codeception\Platform\Extension
 
         $command = $this->getCommand();
         
-        $this->writeln("\r\n");
-        $this->writeln($command);
-
         $descriptorSpec = array(
             array('pipe', 'r'),
             array('file', $this->getLogDir() . 'phantomjs.output.txt', 'w'),
@@ -104,7 +101,6 @@ class Phantoman extends \Codeception\Platform\Extension
         $max_checks = 10;
         $checks = 0;
         
-        $this->writeln("\r\n");
         $this->write("Waiting for the PhantomJS server to be reachable");
         while (true) {
             if ($checks >= $max_checks) {
