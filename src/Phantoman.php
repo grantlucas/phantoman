@@ -37,8 +37,8 @@ class Phantoman extends \Codeception\Platform\Extension
         // If a directory was provided for the path, use old method of appending PhantomJS
         if (is_dir(realpath($this->config['path']))) {
             // Show warning that this is being deprecated
-            $this->writeLn("\r\n");
-            $this->writeLn("WARNING: The PhantomJS path for Phantoman is set to a directory, this is being deprecated in the future. Please update your Phantoman configuration to be the full path to PhantomJS.");
+            $this->writeln("\r\n");
+            $this->writeln("WARNING: The PhantomJS path for Phantoman is set to a directory, this is being deprecated in the future. Please update your Phantoman configuration to be the full path to PhantomJS.");
 
             $this->config['path'] .= '/phantomjs';
         }
@@ -51,6 +51,11 @@ class Phantoman extends \Codeception\Platform\Extension
         // Set default WebDriver port
         if (!isset($this->config['port'])) {
             $this->config['port'] = 4444;
+        }
+
+        // Set default debug mode
+        if (!isset($this->config['debug'])) {
+            $this->config['debug'] = false;
         }
 
         $this->startServer();
@@ -79,11 +84,21 @@ class Phantoman extends \Codeception\Platform\Extension
             return;
         }
 
-        $this->writeLn("\r\n");
+        $this->writeln("\r\n");
         $this->writeln("Starting PhantomJS Server");
 
         $command = $this->getCommand();
-        
+
+        if ($this->config['debug']) {
+            $this->writeln("\r\n");
+
+            // Output the generated command
+            $this->writeln('Generated PhantomJS Command:');
+            $this->writeln($command);
+
+            $this->writeln("\r\n");
+        }
+
         $descriptorSpec = array(
             array('pipe', 'r'),
             array('file', $this->getLogDir() . 'phantomjs.output.txt', 'w'),
@@ -100,7 +115,7 @@ class Phantoman extends \Codeception\Platform\Extension
         // Wait till the server is reachable before continuing
         $max_checks = 10;
         $checks = 0;
-        
+
         $this->write("Waiting for the PhantomJS server to be reachable");
         while (true) {
             if ($checks >= $max_checks) {

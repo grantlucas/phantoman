@@ -76,6 +76,9 @@ options are listed below.
 - `port: {port}`
     - Webdriver port to start PhantomJS with.
     - Default: `4444`
+- `debug: {true|false}`
+    - Display debug output while Phantoman runs
+    - Default: `false`
 
 #### Proxy Support
 
@@ -92,7 +95,7 @@ options are listed below.
     - Enables web security
 - `ignoreSslErrors: {true|false}`
     - Ignores errors in the SSL validation.
-- `sslProtocol: [sslv3|sslv2|tlsv1|any]`
+- `sslProtocol: {sslv3|sslv2|tlsv1|any}`
     - Sets the SSL protocol for secure connections (default is `SSLv3`).
 - `remoteDebuggerPort: {port}`
     - Starts PhantomJS in a debug harness and listens on the specified port
