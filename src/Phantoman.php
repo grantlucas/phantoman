@@ -11,7 +11,7 @@
 
 namespace Codeception\Extension;
 
-use Codeception\Exception\Extension as ExtensionException;
+use Codeception\Exception\ExtensionException;
 
 class Phantoman extends \Codeception\Platform\Extension
 {
