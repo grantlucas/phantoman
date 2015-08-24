@@ -10,7 +10,7 @@ and stopping [PhantomJS](http://phantomjs.org/) when running tests.
 
 ## Minimum Requirements
 
-- Codeception 1.6.4
+- Codeception 2.1.0
 - PHP 5.4
 
 ## Installation using [Composer](https://getcomposer.org)
