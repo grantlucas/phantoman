@@ -220,7 +220,7 @@ class Phantoman extends \Codeception\Platform\Extension
         // Prefix command with exec on non Windows systems to ensure that we receive the correct pid.
         // See http://php.net/manual/en/function.proc-get-status.php#93382
         $commandPrefix = $this->isWindows() ? '' : 'exec ';
-        return escapeshellarg($commandPrefix . realpath($this->config['path'])) . ' ' . $this->getCommandParameters();
+        return $commandPrefix . escapeshellarg(realpath($this->config['path'])) . ' ' . $this->getCommandParameters();
     }
 
     /**
