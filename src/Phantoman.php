@@ -189,17 +189,29 @@ class Phantoman extends \Codeception\Platform\Extension
      */
     private function getCommandParameters()
     {
+        // Map our config options to PhantomJS options
         $mapping = array(
-            'cookiesFile' => '--cookies-file',
+            'port' => '--webdriver',
             'proxy' => '--proxy',
             'proxyType' => '--proxy-type',
             'proxyAuth' => '--proxy-auth',
             'webSecurity' => '--web-security',
-            'port' => '--webdriver',
             'ignoreSslErrors' => '--ignore-ssl-errors',
             'sslProtocol' => '--ssl-protocol',
-            'remoteDebuggerPort' => '--remote-debugger-port'
+            'sslCertificatesPath' => '--ssl-certificates-path',
+            'remoteDebuggerPort' => '--remote-debugger-port',
+            'remoteDebuggerAutorun' => '--remote-debugger-autorun',
+            'cookiesFile' => '--cookies-file',
+            'diskCache' => '--disk-cache',
+            'maxDiskCacheSize' => '--max-disk-cache-size',
+            'loadImage' => '--load-images',
+            'localStoragePath' => '--local-storage-path',
+            'localStorageQuota' => '--local-storage-quota',
+            'localToRemoteUrlAccess' => '--local-to-remote-url-access',
+            'outputEncoding' => '--output-encoding',
+            'scriptEncoding' => '--script-encoding',
         );
+
         $params = array();
         foreach ($this->config as $configKey => $configValue) {
             if (!empty($mapping[$configKey])) {
@@ -210,6 +222,7 @@ class Phantoman extends \Codeception\Platform\Extension
                 $params[] = $mapping[$configKey] . '=' . $configValue;
             }
         }
+
         return implode(' ', $params);
     }
 
