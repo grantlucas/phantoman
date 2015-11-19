@@ -95,10 +95,41 @@ options are listed below.
     - Enables web security
 - `ignoreSslErrors: {true|false}`
     - Ignores errors in the SSL validation.
+    - Defaults to `false`
 - `sslProtocol: {sslv3|sslv2|tlsv1|any}`
-    - Sets the SSL protocol for secure connections (default is `SSLv3`).
+    - Sets the SSL protocol for secure connections
+    - Defaults to `sslv3`
+- `sslCertificatesPath: {path}`
+    - Sets the location for custom CA certificates (if none set, uses system
+      default).
 - `remoteDebuggerPort: {port}`
     - Starts PhantomJS in a debug harness and listens on the specified port
+- `remoteDebuggerAutorun: {true|false}`
+    - Runs the script in the debugger immediately
+    - Defaults to `false`
+- `cookiesFile: {file path}`
+    - Sets the file name to store the persistent cookies
+- `diskCache: {true|false}`
+    - Enabled disk cache
+    - Defaults to `false`
+- `maxDiskCacheSize: {number}`
+    - Limit the size of the disk cache in KB
+- `loadImages: {true|false}`
+    - Loads all inlined images
+    - Defaults to `true`
+- `localStoragePath: {file path}`
+    - The path to save LocalStorage content and WebSQL content
+- `localStorageQuota: {number}`
+    - Maximum size to allow for data in local storage in KB
+- `localToRemoteUrlAccess: {true|false}`
+    - Allows local content to access remote URL
+    - Defaults to `false`
+- `outputEncoding: {encoding}`
+    - Sets the encoding for the terminal output
+    - Default is `utf8`
+- `scriptEncoding: {encoding}`
+    - Sets the encoding used for starting the script
+    - Default is `utf8`
 
 ## Usage
 
