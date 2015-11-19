@@ -190,6 +190,7 @@ class Phantoman extends \Codeception\Platform\Extension
     private function getCommandParameters()
     {
         $mapping = array(
+            'cookiesFile' => '--cookies-file',
             'proxy' => '--proxy',
             'proxyType' => '--proxy-type',
             'proxyAuth' => '--proxy-auth',
