@@ -60,6 +60,7 @@ extensions:
         Codeception\Extension\Phantoman:
             path: '/usr/bin/phantomjs'
             port: 4445
+            suites: ['acceptance']
 ```
 
 ### Available options
@@ -91,6 +92,10 @@ options are listed below.
 
 #### Other
 
+- `suites: {array|string}`
+    - If omitted PhantomJS is started for all suites otherwise specify an array of suites
+      or a single suite name.
+    - Defaults to all suites
 - `webSecurity: {true|false}`
     - Enables web security
 - `ignoreSslErrors: {true|false}`
