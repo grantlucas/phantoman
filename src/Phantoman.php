@@ -263,14 +263,5 @@ class Phantoman extends \Codeception\Platform\Extension
         }
 
         $this->startServer();
-
-        $resource = $this->resource;
-        register_shutdown_function(
-            function () use ($resource) {
-                if (is_resource($resource)) {
-                    proc_terminate($resource);
-                }
-            }
-        );
     }
 }
