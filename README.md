@@ -94,7 +94,9 @@ options are listed below.
 
 - `suites: {array|string}`
     - If omitted PhantomJS is started for all suites otherwise specify an array of suites
-      or a single suite name.
+      or a single suite name. If using an environment (--env) then codeception appends the environment
+      name to the suite name in brackets e.g. "acceptance (staging)". You need to include each suite/environment
+      combination separately in the array.
     - Defaults to all suites
 - `webSecurity: {true|false}`
     - Enables web security
