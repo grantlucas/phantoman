@@ -18,7 +18,8 @@ class Phantoman extends \Codeception\Platform\Extension
 
     // list events to listen to
     static $events = array(
-        'suite.before' => 'beforeSuite',
+        'suite.after' => 'afterSuite',
+        'module.init' => 'moduleInit',
     );
 
     private $resource;
@@ -44,7 +45,7 @@ class Phantoman extends \Codeception\Platform\Extension
         }
 
         // Add .exe extension if running on the windows
-        if ($this->isWindows() && file_exists(realpath($this->config['path'] . '.exe'))) {
+        if ($this->isWindows()) {
             $this->config['path'] .= '.exe';
         }
 
@@ -57,17 +58,6 @@ class Phantoman extends \Codeception\Platform\Extension
         if (!isset($this->config['debug'])) {
             $this->config['debug'] = false;
         }
-
-        $this->startServer();
-
-        $resource = $this->resource;
-        register_shutdown_function(
-            function () use ($resource) {
-                if (is_resource($resource)) {
-                    proc_terminate($resource);
-                }
-            }
-        );
     }
 
     public function __destruct()
@@ -209,7 +199,7 @@ class Phantoman extends \Codeception\Platform\Extension
             'localStorageQuota' => '--local-storage-quota',
             'localToRemoteUrlAccess' => '--local-to-remote-url-access',
             'outputEncoding' => '--output-encoding',
-            'scriptEncoding' => '--script-encoding',
+            'scriptEncoding' => '--script-encoding'
         );
 
         $params = array();
@@ -234,7 +224,7 @@ class Phantoman extends \Codeception\Platform\Extension
         // Prefix command with exec on non Windows systems to ensure that we receive the correct pid.
         // See http://php.net/manual/en/function.proc-get-status.php#93382
         $commandPrefix = $this->isWindows() ? '' : 'exec ';
-        return $commandPrefix . escapeshellarg(realpath($this->config['path'])) . ' ' . $this->getCommandParameters();
+        return $commandPrefix . escapeshellarg($this->config['path']) . ' ' . $this->getCommandParameters();
     }
 
     /**
@@ -248,9 +238,30 @@ class Phantoman extends \Codeception\Platform\Extension
         return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
     }
 
-    // methods that handle events
-    public function beforeSuite(\Codeception\Event\SuiteEvent $e)
+
+
+    public function afterSuite(\Codeception\Event\SuiteEvent $e)
     {
-        // Dummy function required to keep reference to this instance, otherwise Codeception would destroy it immediately
+        if ($this->resource) {
+            proc_terminate($this->resource);
+        }
+    }
+
+    public function moduleInit(\Codeception\Event\SuiteEvent $e)
+    {
+        if (isset($this->config["suites"])) {
+            // Check to make sure the the suite is enabled for phantom.
+            if (is_string($this->config["suites"])) {
+                $suites = [$this->config["suites"]];
+            } else {
+                $suites = $this->config["suites"];
+            }
+
+            if (!in_array($e->getSuite()->getName(), $suites)) {
+                return;
+            }
+        }
+
+        $this->startServer();
     }
 }
