@@ -45,7 +45,7 @@ class Phantoman extends \Codeception\Platform\Extension
         }
 
         // Add .exe extension if running on the windows
-        if ($this->isWindows() && file_exists(realpath($this->config['path'] . '.exe'))) {
+        if ($this->isWindows()) {
             $this->config['path'] .= '.exe';
         }
 
@@ -224,7 +224,7 @@ class Phantoman extends \Codeception\Platform\Extension
         // Prefix command with exec on non Windows systems to ensure that we receive the correct pid.
         // See http://php.net/manual/en/function.proc-get-status.php#93382
         $commandPrefix = $this->isWindows() ? '' : 'exec ';
-        return $commandPrefix . escapeshellarg(realpath($this->config['path'])) . ' ' . $this->getCommandParameters();
+        return $commandPrefix . escapeshellarg($this->config['path']) . ' ' . $this->getCommandParameters();
     }
 
     /**
