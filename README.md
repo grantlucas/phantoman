@@ -60,6 +60,7 @@ extensions:
         Codeception\Extension\Phantoman:
             path: '/usr/bin/phantomjs'
             port: 4445
+            suites: ['acceptance']
 ```
 
 ### Available options
@@ -91,6 +92,13 @@ options are listed below.
 
 #### Other
 
+- `suites: {array|string}`
+    - If omitted, PhantomJS is started for all suites.
+    - Specify an array of suites or a single suite name.
+        - If you're using an environment (`--env`), Codeception appends the
+          environment name to the suite name in brackets. You need to include
+          each suite/environment combination separately in the array.
+            - `suites: ['acceptance', 'acceptance (staging)', 'acceptance (prod)']`
 - `webSecurity: {true|false}`
     - Enables web security
 - `ignoreSslErrors: {true|false}`
