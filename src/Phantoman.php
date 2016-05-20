@@ -30,14 +30,14 @@ class Phantoman extends \Codeception\Platform\Extension
 
         // Set default path for PhantomJS to "vendor/bin/phantomjs" for if it was installed via composer
         if (!isset($this->config['path'])) {
-            $this->config['path'] = "vendor/bin/phantomjs";
+            $this->config['path'] = 'vendor/bin/phantomjs';
         }
 
         // If a directory was provided for the path, use old method of appending PhantomJS
         if (is_dir(realpath($this->config['path']))) {
             // Show warning that this is being deprecated
-            $this->writeln("\r\n");
-            $this->writeln("WARNING: The PhantomJS path for Phantoman is set to a directory, this is being deprecated in the future. Please update your Phantoman configuration to be the full path to PhantomJS.");
+            $this->writeln(PHP_EOL);
+            $this->writeln('WARNING: The PhantomJS path for Phantoman is set to a directory, this is being deprecated in the future. Please update your Phantoman configuration to be the full path to PhantomJS.');
 
             $this->config['path'] .= '/phantomjs';
         }
@@ -72,19 +72,19 @@ class Phantoman extends \Codeception\Platform\Extension
             return;
         }
 
-        $this->writeln("\r\n");
-        $this->writeln("Starting PhantomJS Server");
+        $this->writeln(PHP_EOL);
+        $this->writeln('Starting PhantomJS Server');
 
         $command = $this->getCommand();
 
         if ($this->config['debug']) {
-            $this->writeln("\r\n");
+            $this->writeln(PHP_EOL);
 
             // Output the generated command
             $this->writeln('Generated PhantomJS Command:');
             $this->writeln($command);
 
-            $this->writeln("\r\n");
+            $this->writeln(PHP_EOL);
         }
 
         $descriptorSpec = array(
@@ -104,7 +104,7 @@ class Phantoman extends \Codeception\Platform\Extension
         $max_checks = 10;
         $checks = 0;
 
-        $this->write("Waiting for the PhantomJS server to be reachable");
+        $this->write('Waiting for the PhantomJS server to be reachable');
         while (true) {
             if ($checks >= $max_checks) {
                 throw new ExtensionException($this, 'PhantomJS server never became reachable');
@@ -113,7 +113,7 @@ class Phantoman extends \Codeception\Platform\Extension
 
             if ($fp = @fsockopen('127.0.0.1', $this->config['port'], $errCode, $errStr, 10)) {
                 $this->writeln('');
-                $this->writeln("PhantomJS server now accessible");
+                $this->writeln('PhantomJS server now accessible');
                 fclose($fp);
                 break;
             }
@@ -135,7 +135,7 @@ class Phantoman extends \Codeception\Platform\Extension
     private function stopServer()
     {
         if ($this->resource !== null) {
-            $this->write("Stopping PhantomJS Server");
+            $this->write('Stopping PhantomJS Server');
 
             // Wait till the server has been stopped
             $max_checks = 10;
@@ -144,7 +144,7 @@ class Phantoman extends \Codeception\Platform\Extension
                 // unset resource to allow the tests to finish
                 if ($i == $max_checks - 1 && proc_get_status($this->resource)['running'] == true) {
                     $this->writeln('');
-                    $this->writeln("Unable to properly shutdown PhantomJS server");
+                    $this->writeln('Unable to properly shutdown PhantomJS server');
                     unset($this->resource);
                     break;
                 }
@@ -152,7 +152,7 @@ class Phantoman extends \Codeception\Platform\Extension
                 // Check if the process has stopped yet
                 if (proc_get_status($this->resource)['running'] == false) {
                     $this->writeln('');
-                    $this->writeln("PhantomJS server stopped");
+                    $this->writeln('PhantomJS server stopped');
                     unset($this->resource);
                     break;
                 }
@@ -160,7 +160,7 @@ class Phantoman extends \Codeception\Platform\Extension
                 foreach ($this->pipes as $pipe) {
                     fclose($pipe);
                 }
-                proc_terminate($this->resource, 2);
+                proc_terminate($this->resource, SIGINT);
 
                 $this->write('.');
 
@@ -242,11 +242,11 @@ class Phantoman extends \Codeception\Platform\Extension
     public function moduleInit(\Codeception\Event\SuiteEvent $e)
     {
         // Check if PhantomJS should only be started for specific suites
-        if (isset($this->config["suites"])) {
-            if (is_string($this->config["suites"])) {
-                $suites = [$this->config["suites"]];
+        if (isset($this->config['suites'])) {
+            if (is_string($this->config['suites'])) {
+                $suites = [$this->config['suites']];
             } else {
-                $suites = $this->config["suites"];
+                $suites = $this->config['suites'];
             }
 
             // If the current suites aren't in the desired array, return without starting PhantomJS
