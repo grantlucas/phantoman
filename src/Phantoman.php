@@ -160,7 +160,7 @@ class Phantoman extends \Codeception\Platform\Extension
                 foreach ($this->pipes as $pipe) {
                     fclose($pipe);
                 }
-                proc_terminate($this->resource, 2);
+                proc_terminate($this->resource, SIGINT);
 
                 $this->write('.');
 
