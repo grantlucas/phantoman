@@ -130,39 +130,41 @@ class Phantoman extends \Codeception\Platform\Extension
      */
     private function stopServer()
     {
-        if ($this->resource !== null) {
-            $this->write('Stopping PhantomJS Server');
-
-            // Try to stop the server
-            for ($checks = 0; $checks < self::MAX_CHECKS && $this->isPhantomRunning(); ++$checks) {
-                if ($checks > 0) {
-                    $this->write('.');
-                }
-
-                foreach ($this->pipes as $pipe) {
-                    if (is_resource($pipe)) {
-                        fclose($pipe);
-                    }
-                }
-
-                proc_terminate($this->resource, SIGINT);
-
-                // Wait before checking again
-                sleep(1);
-            }
-
-            // If it's still not shut down, just unset resource to allow the tests to finish
-            if ($this->isPhantomRunning()) {
-                $this->writeln('');
-                $this->writeln('Unable to properly shutdown PhantomJS server');
-                unset($this->resource);
-                return;
-            }
-
-            $this->writeln('');
-            $this->writeln('PhantomJS server stopped');
-            unset($this->resource);
+        if ($this->resource === null) {
+            return;
         }
+
+        $this->write('Stopping PhantomJS Server');
+
+        // Try to stop the server
+        for ($checks = 0; $checks < self::MAX_CHECKS && $this->isPhantomRunning(); ++$checks) {
+            if ($checks > 0) {
+                $this->write('.');
+            }
+
+            foreach ($this->pipes as $pipe) {
+                if (is_resource($pipe)) {
+                    fclose($pipe);
+                }
+            }
+
+            proc_terminate($this->resource, SIGINT);
+
+            // Wait before checking again
+            sleep(1);
+        }
+
+        // If it's still not shut down, just unset resource to allow the tests to finish
+        if ($this->isPhantomRunning()) {
+            $this->writeln('');
+            $this->writeln('Unable to properly shutdown PhantomJS server');
+            unset($this->resource);
+            return;
+        }
+
+        $this->writeln('');
+        $this->writeln('PhantomJS server stopped');
+        unset($this->resource);
     }
 
     /**
