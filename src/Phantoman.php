@@ -36,7 +36,7 @@ class Phantoman extends \Codeception\Platform\Extension
         // If a directory was provided for the path, use old method of appending PhantomJS
         if (is_dir(realpath($this->config['path']))) {
             // Show warning that this is being deprecated
-            $this->writeln("\r\n");
+            $this->writeln(PHP_EOL);
             $this->writeln('WARNING: The PhantomJS path for Phantoman is set to a directory, this is being deprecated in the future. Please update your Phantoman configuration to be the full path to PhantomJS.');
 
             $this->config['path'] .= '/phantomjs';
@@ -72,19 +72,19 @@ class Phantoman extends \Codeception\Platform\Extension
             return;
         }
 
-        $this->writeln("\r\n");
+        $this->writeln(PHP_EOL);
         $this->writeln('Starting PhantomJS Server');
 
         $command = $this->getCommand();
 
         if ($this->config['debug']) {
-            $this->writeln("\r\n");
+            $this->writeln(PHP_EOL);
 
             // Output the generated command
             $this->writeln('Generated PhantomJS Command:');
             $this->writeln($command);
 
-            $this->writeln("\r\n");
+            $this->writeln(PHP_EOL);
         }
 
         $descriptorSpec = array(
