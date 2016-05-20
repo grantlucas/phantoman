@@ -15,7 +15,10 @@ use Codeception\Exception\ExtensionException;
 
 class Phantoman extends \Codeception\Platform\Extension
 {
-    // list events to listen to
+    /// Number of max checks while waiting for PhantomJS to be responsive/stopped
+    const MAX_CHECKS = 10;
+
+    // List events to listen to
     static $events = array(
         'module.init' => 'moduleInit',
     );
@@ -95,37 +98,30 @@ class Phantoman extends \Codeception\Platform\Extension
 
         $this->resource = proc_open($command, $descriptorSpec, $this->pipes, null, null, array('bypass_shell' => true));
 
-        if (!is_resource($this->resource) || !proc_get_status($this->resource)['running']) {
+        if (!$this->isPhantomRunning()) {
             proc_close($this->resource);
             throw new ExtensionException($this, 'Failed to start PhantomJS server.');
         }
 
         // Wait till the server is reachable before continuing
-        $max_checks = 10;
-        $checks = 0;
-
         $this->write('Waiting for the PhantomJS server to be reachable');
-        while (true) {
-            if ($checks >= $max_checks) {
-                throw new ExtensionException($this, 'PhantomJS server never became reachable');
-                break;
+        for ($checks = 0; $checks < self::MAX_CHECKS && !$this->isPhantomReachable(); ++$checks) {
+            if ($checks > 0) {
+                $this->write('.');
             }
-
-            if ($fp = @fsockopen('127.0.0.1', $this->config['port'], $errCode, $errStr, 10)) {
-                $this->writeln('');
-                $this->writeln('PhantomJS server now accessible');
-                fclose($fp);
-                break;
-            }
-
-            $this->write('.');
-            $checks++;
 
             // Wait before checking again
             sleep(1);
         }
 
         // Clear progress line writing
+        $this->writeln('');
+
+        if (!$this->isPhantomReachable()) {
+            throw new ExtensionException($this, 'PhantomJS server never became reachable');
+        }
+
+        $this->writeln('PhantomJS server is now accessible');
         $this->writeln('');
     }
 
@@ -137,36 +133,35 @@ class Phantoman extends \Codeception\Platform\Extension
         if ($this->resource !== null) {
             $this->write('Stopping PhantomJS Server');
 
-            // Wait till the server has been stopped
-            $max_checks = 10;
-            for ($i = 0; $i < $max_checks; $i++) {
-                // If we're on the last loop, and it's still not shut down, just
-                // unset resource to allow the tests to finish
-                if ($i == $max_checks - 1 && proc_get_status($this->resource)['running'] == true) {
-                    $this->writeln('');
-                    $this->writeln('Unable to properly shutdown PhantomJS server');
-                    unset($this->resource);
-                    break;
-                }
-
-                // Check if the process has stopped yet
-                if (proc_get_status($this->resource)['running'] == false) {
-                    $this->writeln('');
-                    $this->writeln('PhantomJS server stopped');
-                    unset($this->resource);
-                    break;
+            // Try to stop the server
+            for ($checks = 0; $checks < self::MAX_CHECKS && $this->isPhantomRunning(); ++$checks) {
+                if ($checks > 0) {
+                    $this->write('.');
                 }
 
                 foreach ($this->pipes as $pipe) {
-                    fclose($pipe);
+                    if (is_resource($pipe)) {
+                        fclose($pipe);
+                    }
                 }
-                proc_terminate($this->resource, SIGINT);
 
-                $this->write('.');
+                proc_terminate($this->resource, SIGINT);
 
                 // Wait before checking again
                 sleep(1);
             }
+
+            // If it's still not shut down, just unset resource to allow the tests to finish
+            if ($this->isPhantomRunning()) {
+                $this->writeln('');
+                $this->writeln('Unable to properly shutdown PhantomJS server');
+                unset($this->resource);
+                return;
+            }
+
+            $this->writeln('');
+            $this->writeln('PhantomJS server stopped');
+            unset($this->resource);
         }
     }
 
@@ -223,6 +218,27 @@ class Phantoman extends \Codeception\Platform\Extension
         // See http://php.net/manual/en/function.proc-get-status.php#93382
         $commandPrefix = $this->isWindows() ? '' : 'exec ';
         return $commandPrefix . escapeshellarg(realpath($this->config['path'])) . ' ' . $this->getCommandParameters();
+    }
+
+    /**
+     * @return bool
+     */
+    private function isPhantomRunning()
+    {
+        return is_resource($this->resource) && proc_get_status($this->resource)['running'] === true;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isPhantomReachable()
+    {
+        if ($fp = @fsockopen('127.0.0.1', $this->config['port'], $errCode, $errStr, 10)) {
+            fclose($fp);
+            return true;
+        }
+
+        return false;
     }
 
     /**
