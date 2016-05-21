@@ -26,6 +26,15 @@ class Phantoman extends \Codeception\Platform\Extension
 
     public function __construct($config, $options)
     {
+        // Codeception has an option called silent, which suppresses the console output.
+        // Unfortunately there is no builtin way to activate this mode for a single extension.
+        // This is why the option will passed from the extension configuration ($config)
+        // to the global configuration ($options);
+        // Note: This must be done before calling the parent constructor.
+        if (isset($config['silent']) && $config['silent']) {
+            $options['silent'] = true;
+        }
+
         parent::__construct($config, $options);
 
         // Set default path for PhantomJS to "vendor/bin/phantomjs" for if it was installed via composer
