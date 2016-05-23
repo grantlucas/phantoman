@@ -138,6 +138,9 @@ options are listed below.
 - `scriptEncoding: {encoding}`
     - Sets the encoding used for starting the script
     - Default is `utf8`
+- `silent: {true|false}`
+    - Suppresses messages about starting and stopping the server
+    - Default is `false`
 
 ## Usage
 
