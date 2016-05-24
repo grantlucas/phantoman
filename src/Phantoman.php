@@ -15,9 +15,6 @@ use Codeception\Exception\ExtensionException;
 
 class Phantoman extends \Codeception\Platform\Extension
 {
-    /// Number of max checks while waiting for PhantomJS to be responsive/stopped
-    const MAX_CHECKS = 10;
-
     // List events to listen to
     static $events = array(
         'module.init' => 'moduleInit',
@@ -53,6 +50,16 @@ class Phantoman extends \Codeception\Platform\Extension
         // Set default WebDriver port
         if (!isset($this->config['port'])) {
             $this->config['port'] = 4444;
+        }
+
+        // Set default connection timeout
+        if (!isset($this->config['connectionTimeout']) || !is_int($this->config['connectionTimeout'])) {
+            $this->config['connectionTimeout'] = 10;
+        }
+
+        // Set default shutdown timeout
+        if (!isset($this->config['shutdownTimeout']) || !is_int($this->config['shutdownTimeout'])) {
+            $this->config['shutdownTimeout'] = 10;
         }
 
         // Set default debug mode
@@ -105,12 +112,12 @@ class Phantoman extends \Codeception\Platform\Extension
 
         // Wait till the server is reachable before continuing
         $this->write('Waiting for the PhantomJS server to be reachable');
-        for ($checks = 0; $checks < self::MAX_CHECKS && !$this->isPhantomReachable(); ++$checks) {
-            if ($checks > 0) {
+        for ($seconds = 0; $seconds < $this->config['connectionTimeout'] && !$this->isPhantomReachable(); ++$seconds) {
+            if ($seconds > 0) {
                 $this->write('.');
             }
 
-            // Wait before checking again
+            // Wait one second before checking again
             sleep(1);
         }
 
@@ -137,8 +144,8 @@ class Phantoman extends \Codeception\Platform\Extension
         $this->write('Stopping PhantomJS Server');
 
         // Try to stop the server
-        for ($checks = 0; $checks < self::MAX_CHECKS && $this->isPhantomRunning(); ++$checks) {
-            if ($checks > 0) {
+        for ($seconds = 0; $seconds < $this->config['shutdownTimeout'] && $this->isPhantomRunning(); ++$seconds) {
+            if ($seconds > 0) {
                 $this->write('.');
             }
 
@@ -150,7 +157,7 @@ class Phantoman extends \Codeception\Platform\Extension
 
             proc_terminate($this->resource, SIGINT);
 
-            // Wait before checking again
+            // Wait one second before checking again
             sleep(1);
         }
 

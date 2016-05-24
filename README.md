@@ -78,8 +78,14 @@ options are listed below.
     - Webdriver port to start PhantomJS with.
     - Default: `4444`
 - `debug: {true|false}`
-    - Display debug output while Phantoman runs
+    - Display debug output while Phantoman runs.
     - Default: `false`
+- `connectionTimeout: {seconds}`
+    - Timeout for opening a connection to PhantomJS.
+    - Default: 10
+- `shutdownTimeout: {seconds}`
+    - Timeout for closing the connection to PhantomJS.
+    - Default: 10
 
 #### Proxy Support
 
