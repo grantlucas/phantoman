@@ -169,6 +169,10 @@ class Phantoman extends \Codeception\Platform\Extension
                 foreach ($this->pipes as $pipe) {
                     fclose($pipe);
                 }
+
+                // Terminate the process
+                // Note: Use of SIGINT adds dependency on PCTNL extension so we
+                // use the integer value instead
                 proc_terminate($this->resource, 2);
 
                 $this->write('.');
