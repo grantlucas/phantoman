@@ -167,7 +167,9 @@ class Phantoman extends \Codeception\Platform\Extension
                 }
 
                 foreach ($this->pipes as $pipe) {
-                    fclose($pipe);
+                    if (is_resource($pipe)) {
+                        fclose($pipe);
+                    }
                 }
 
                 // Terminate the process
