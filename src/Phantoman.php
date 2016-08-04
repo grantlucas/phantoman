@@ -56,6 +56,10 @@ class Phantoman extends \Codeception\Platform\Extension
             $this->config['path'] .= '.exe';
         }
 
+        if (!file_exists(realpath($this->config['path']))) {
+            throw new ExtensionException($this, "File not found: {$this->config['path']}.");
+        }
+
         // Set default WebDriver port
         if (!isset($this->config['port'])) {
             $this->config['port'] = 4444;
