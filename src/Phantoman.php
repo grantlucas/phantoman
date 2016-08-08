@@ -269,7 +269,8 @@ class Phantoman extends \Codeception\Platform\Extension
             }
 
             // If the current suites aren't in the desired array, return without starting PhantomJS
-            if (!in_array($e->getSuite()->getName(), $suites)) {
+            if (!in_array($e->getSuite()->getBaseName(), $suites)
+                && !in_array($e->getSuite()->getName(), $suites)) {
                 return;
             }
         }
