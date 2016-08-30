@@ -2,12 +2,12 @@
     "name": "site5/phantoman",
     "description": "The Codeception extension for automatically starting and stopping PhantomJS when running tests.",
     "keywords": ["codeception", "extension", "phantomjs", "headless"],
-    "homepage": "https://github.com/site5/phantoman",
+    "homepage": "https://github.com/grantlucas/phantoman",
     "license": "MIT",
     "authors": [
         {
             "name": "Grant Lucas",
-            "email": "grant.lucas@wwwh.com"
+            "email": "contact@grantlucas.com"
         }
     ],
     "require": {
