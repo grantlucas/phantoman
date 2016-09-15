@@ -218,6 +218,7 @@ class Phantoman extends \Codeception\Platform\Extension
             'outputEncoding' => '--output-encoding',
             'scriptEncoding' => '--script-encoding',
             'webdriverLoglevel' => '--webdriver-loglevel',
+            'webdriverLogfile' => '--webdriver-logfile',
         );
 
         $params = array();
