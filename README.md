@@ -141,6 +141,11 @@ options are listed below.
 - `silent: {true|false}`
     - Suppresses messages about starting and stopping the server
     - Default is `false`
+- `webdriverLoglevel: {ERROR|WARN|INFO|DEBUG)}`
+    - WebDriver Logging Level
+    - Defaults to `INFO`
+- `webdriverLogfile: {path}`
+    - File where to write the WebDriver’s Log
 
 ## Usage
 
