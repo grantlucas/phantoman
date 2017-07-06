@@ -41,9 +41,10 @@ class Phantoman extends \Codeception\Platform\Extension
         if (!isset($this->config['path'])) {
             $this->config['path'] = 'vendor/bin/phantomjs';
         }
-
+        
+        $this->config['path'] = realpath(__DIR__ . '/../../../..') . '/' . $this->config['path'];
         // If a directory was provided for the path, use old method of appending PhantomJS
-        if (is_dir(realpath($this->config['path']))) {
+        if (is_dir($this->config['path'])) {
             // Show warning that this is being deprecated
             $this->writeln(PHP_EOL);
             $this->writeln('WARNING: The PhantomJS path for Phantoman is set to a directory, this is being deprecated in the future. Please update your Phantoman configuration to be the full path to PhantomJS.');
@@ -272,7 +273,8 @@ class Phantoman extends \Codeception\Platform\Extension
 
             // If the current suites aren't in the desired array, return without starting PhantomJS
             if (!in_array($e->getSuite()->getBaseName(), $suites)
-                && !in_array($e->getSuite()->getName(), $suites)) {
+                && !in_array($e->getSuite()->getName(), $suites)
+            ) {
                 return;
             }
         }
