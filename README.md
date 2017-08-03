@@ -10,7 +10,7 @@ and stopping [PhantomJS](http://phantomjs.org/) when running tests.
 
 ## Minimum Requirements
 
-- Codeception 2.1.0
+- Codeception 2.2.7
 - PHP 5.4
 
 ## Installation using [Composer](https://getcomposer.org)
@@ -40,7 +40,7 @@ PhantomJS is used, please set the path as shown in the configuration below.**
 
 By default Phantoman will use the path `vendor/bin/phantomjs` and port `4444`.
 
-All enabling and configuration is done in `codeception.yml`.
+Enabling and configuration can be done in `codeception.yml` or in your suite config file.
 
 ### Enabling Phantoman with defaults
 
@@ -61,6 +61,20 @@ extensions:
             path: '/usr/bin/phantomjs'
             port: 4445
             suites: ['acceptance']
+```
+
+### Enabling Phantoman in the acceptance suite except on the `ci` environment
+```yaml
+extensions:
+  enabled:
+    - Codeception\Extension\Phantoman:
+        suites: ['acceptance']
+env:
+  ci:
+    extensions:
+      enabled:
+        - Codeception\Extension\Phantoman:
+            suites: []
 ```
 
 ### Available options
@@ -95,10 +109,6 @@ options are listed below.
 - `suites: {array|string}`
     - If omitted, PhantomJS is started for all suites.
     - Specify an array of suites or a single suite name.
-        - If you're using an environment (`--env`), Codeception appends the
-          environment name to the suite name in brackets. You need to include
-          each suite/environment combination separately in the array.
-            - `suites: ['acceptance', 'acceptance (staging)', 'acceptance (prod)']`
 - `webSecurity: {true|false}`
     - Enables web security
 - `ignoreSslErrors: {true|false}`
@@ -154,13 +164,13 @@ automatically start the PhantomJS server and wait for it to be accessible before
 proceeding with the tests.
 
 ```bash
-Starting PhantomJS Server
+Starting PhantomJS Server.
 Waiting for the PhantomJS server to be reachable..
-PhantomJS server now accessible
+PhantomJS server now accessible.
 ```
 
 Once the tests are complete, PhantomJS will be shut down.
 
 ```bash
-Stopping PhantomJS Server
+Stopping PhantomJS Server.
 ```
