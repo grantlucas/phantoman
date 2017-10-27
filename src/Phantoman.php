@@ -241,7 +241,7 @@ class Phantoman extends Extension
             'cookiesFile' => '--cookies-file',
             'diskCache' => '--disk-cache',
             'maxDiskCacheSize' => '--max-disk-cache-size',
-            'loadImage' => '--load-images',
+            'loadImages' => '--load-images',
             'localStoragePath' => '--local-storage-path',
             'localStorageQuota' => '--local-storage-quota',
             'localToRemoteUrlAccess' => '--local-to-remote-url-access',
