@@ -70,20 +70,7 @@ class Phantoman extends Extension
         }
         parent::__construct($config, $options);
 
-        // Set default path for PhantomJS to "vendor/bin/phantomjs" for if it was
-        // installed via composer.
-        if (!isset($this->config['path'])) {
-            $this->config['path'] = 'vendor/bin/phantomjs';
-        }
-
-        // Add .exe extension if running on the windows.
-        if ($this->isWindows() && file_exists(realpath($this->config['path'] . '.exe'))) {
-            $this->config['path'] .= '.exe';
-        }
-
-        if (!file_exists(realpath($this->config['path']))) {
-            throw new ExtensionException($this, "PhantomJS executable not found: {$this->config['path']}");
-        }
+        $this->detect_phantomjs_binary();
 
         // Set default WebDriver port.
         if (!isset($this->config['port'])) {
@@ -93,6 +80,29 @@ class Phantoman extends Extension
         // Set default debug mode.
         if (!isset($this->config['debug'])) {
             $this->config['debug'] = false;
+        }
+    }
+
+    public function detect_phantomjs_binary() {
+        $paths = array('vendor/bin/phantomjs', '/usr/bin/phantomjs');
+        $found = false;
+        foreach ($paths as &$path) {
+            if (file_exists(realpath($path))) {
+                if (!isset($this->config['path'])) {
+                    $this->config['path'] = $path;
+                }
+
+                // Add .exe extension if running on the windows.
+                if ($this->isWindows() && file_exists(realpath($this->config['path'] . '.exe'))) {
+                    $this->config['path'] .= '.exe';
+                }
+
+                $found = true;
+            }
+        }
+
+        if (!$found) {
+            throw new ExtensionException($this, "PhantomJS executable not found: " . print_r($paths, true));
         }
     }
 
