@@ -19,6 +19,9 @@
             "email": "pwnyprod@gmail.com"
         }
     ],
+    "scripts": {
+        "tests": "vendor/bin/codecept build && vendor/bin/codecept run"
+    },
     "require": {
         "php": ">=7.4",
         "codeception/codeception": "^4"
