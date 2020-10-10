@@ -51,11 +51,6 @@ class Phantoman extends Extension
     private array $pipes;
 
     /**
-     * @var \Codeception\Extension\PhantomanFactory
-     */
-    private PhantomanFactory $factory;
-
-    /**
      * Phantoman constructor.
      *
      * @param array $config
@@ -74,11 +69,11 @@ class Phantoman extends Extension
             $options['silent'] = true;
         }
 
-        $this->factory = new PhantomanFactory();
+        $factory = new PhantomanFactory();
 
         parent::__construct($config, $options);
 
-        $this->config = $this->factory->createConfigurator()->configureExtension($this->config);
+        $this->config = $factory->createConfigurator()->configureExtension($this->config);
     }
 
     /**
