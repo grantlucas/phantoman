@@ -30,9 +30,11 @@ class Phantoman extends Extension
      *
      * @var array
      */
-    protected static $events = [
-        Events::SUITE_INIT => 'suiteInit',
-    ];
+    protected static array $events
+        = [
+            Events::SUITE_INIT => 'suiteInit',
+            Events::SUITE_AFTER  => 'afterSuite',
+        ];
 
     /**
      * A resource representing the PhantomJS process.
@@ -46,7 +48,7 @@ class Phantoman extends Extension
      *
      * @var array
      */
-    private $pipes;
+    private array $pipes;
 
     /**
      * Phantoman constructor.
@@ -55,8 +57,6 @@ class Phantoman extends Extension
      *   Current extension configuration.
      * @param array $options
      *   Passed running options.
-     *
-     * @throws \Codeception\Exception\ExtensionException
      */
     public function __construct(array $config, array $options)
     {
@@ -65,43 +65,15 @@ class Phantoman extends Extension
         // a single extension. This is why the option will passed from the
         // extension configuration ($config) to the global configuration ($options);
         // Note: This must be done before calling the parent constructor.
-        if (isset($config['silent']) && $config['silent']) {
+        if(isset($config['silent']) && $config['silent']) {
             $options['silent'] = true;
         }
+
+        $factory = new PhantomanFactory();
+
         parent::__construct($config, $options);
 
-        // Set default path for PhantomJS to "vendor/bin/phantomjs" for if it was
-        // installed via composer.
-        if (!isset($this->config['path'])) {
-            $this->config['path'] = 'vendor/bin/phantomjs';
-        }
-
-        // Add .exe extension if running on the windows.
-        if ($this->isWindows() && file_exists(realpath($this->config['path'] . '.exe'))) {
-            $this->config['path'] .= '.exe';
-        }
-
-        if (!file_exists(realpath($this->config['path']))) {
-            throw new ExtensionException($this, "PhantomJS executable not found: {$this->config['path']}");
-        }
-
-        // Set default WebDriver port.
-        if (!isset($this->config['port'])) {
-            $this->config['port'] = 4444;
-        }
-
-        // Set default debug mode.
-        if (!isset($this->config['debug'])) {
-            $this->config['debug'] = false;
-        }
-    }
-
-    /**
-     * Stop the server when we get destroyed.
-     */
-    public function __destruct()
-    {
-        $this->stopServer();
+        $this->config = $factory->createConfigurator()->configureExtension($this->config);
     }
 
     /**
@@ -109,9 +81,9 @@ class Phantoman extends Extension
      *
      * @throws \Codeception\Exception\ExtensionException
      */
-    private function startServer()
+    public function startServer(): void
     {
-        if ($this->resource !== null) {
+        if($this->resource !== null) {
             return;
         }
 
@@ -120,7 +92,7 @@ class Phantoman extends Extension
 
         $command = $this->getCommand();
 
-        if ($this->config['debug']) {
+        if($this->config['debug']) {
             $this->writeln(PHP_EOL);
 
             // Output the generated command.
@@ -131,29 +103,29 @@ class Phantoman extends Extension
 
         $descriptorSpec = [
             ['pipe', 'r'],
-            ['file', $this->getLogDir() . 'phantomjs.output.txt', 'w'],
-            ['file', $this->getLogDir() . 'phantomjs.errors.txt', 'a'],
+            ['file', $this->getLogDir().'phantomjs.output.txt', 'w'],
+            ['file', $this->getLogDir().'phantomjs.errors.txt', 'a'],
         ];
 
         $this->resource = proc_open($command, $descriptorSpec, $this->pipes, null, null, ['bypass_shell' => true]);
 
-        if (!is_resource($this->resource) || !proc_get_status($this->resource)['running']) {
+        if(!is_resource($this->resource) || !proc_get_status($this->resource)['running']) {
             proc_close($this->resource);
             throw new ExtensionException($this, 'Failed to start PhantomJS server.');
         }
 
         // Wait till the server is reachable before continuing.
         $max_checks = 10;
-        $checks = 0;
+        $checks     = 0;
 
         $this->write('Waiting for the PhantomJS server to be reachable.');
-        while (true) {
-            if ($checks >= $max_checks) {
+        while(true) {
+            if($checks >= $max_checks) {
                 throw new ExtensionException($this, 'PhantomJS server never became reachable.');
             }
 
             $fp = @fsockopen('127.0.0.1', $this->config['port'], $errCode, $errStr, 10);
-            if ($fp) {
+            if($fp) {
                 $this->writeln('');
                 $this->writeln('PhantomJS server now accessible.');
                 fclose($fp);
@@ -174,17 +146,17 @@ class Phantoman extends Extension
     /**
      * Stop PhantomJS server.
      */
-    private function stopServer()
+    private function stopServer(): void
     {
-        if ($this->resource !== null) {
+        if($this->resource !== null) {
             $this->write('Stopping PhantomJS Server.');
 
             // Wait till the server has been stopped.
             $max_checks = 10;
-            for ($i = 0; $i < $max_checks; $i++) {
+            for($i = 0; $i < $max_checks; $i++) {
                 // If we're on the last loop, and it's still not shut down, just
                 // unset resource to allow the tests to finish.
-                if ($i === $max_checks - 1 && proc_get_status($this->resource)['running'] === true) {
+                if($i === $max_checks - 1 && proc_get_status($this->resource)['running'] === true) {
                     $this->writeln('');
                     $this->writeln('Unable to properly shutdown PhantomJS server.');
                     unset($this->resource);
@@ -192,15 +164,15 @@ class Phantoman extends Extension
                 }
 
                 // Check if the process has stopped yet.
-                if (proc_get_status($this->resource)['running'] === false) {
+                if(proc_get_status($this->resource)['running'] === false) {
                     $this->writeln('');
                     $this->writeln('PhantomJS server stopped.');
                     unset($this->resource);
                     break;
                 }
 
-                foreach ($this->pipes as $pipe) {
-                    if (is_resource($pipe)) {
+                foreach($this->pipes as $pipe) {
+                    if(is_resource($pipe)) {
                         fclose($pipe);
                     }
                 }
@@ -224,41 +196,41 @@ class Phantoman extends Extension
      * @return string
      *   All parameters separated by spaces.
      */
-    private function getCommandParameters()
+    private function getCommandParameters(): string
     {
         // Map our config options to PhantomJS options.
         $mapping = [
-            'port' => '--webdriver',
-            'proxy' => '--proxy',
-            'proxyType' => '--proxy-type',
-            'proxyAuth' => '--proxy-auth',
-            'webSecurity' => '--web-security',
-            'ignoreSslErrors' => '--ignore-ssl-errors',
-            'sslProtocol' => '--ssl-protocol',
-            'sslCertificatesPath' => '--ssl-certificates-path',
-            'remoteDebuggerPort' => '--remote-debugger-port',
-            'remoteDebuggerAutorun' => '--remote-debugger-autorun',
-            'cookiesFile' => '--cookies-file',
-            'diskCache' => '--disk-cache',
-            'maxDiskCacheSize' => '--max-disk-cache-size',
-            'loadImages' => '--load-images',
-            'localStoragePath' => '--local-storage-path',
-            'localStorageQuota' => '--local-storage-quota',
+            'port'                   => '--webdriver',
+            'proxy'                  => '--proxy',
+            'proxyType'              => '--proxy-type',
+            'proxyAuth'              => '--proxy-auth',
+            'webSecurity'            => '--web-security',
+            'ignoreSslErrors'        => '--ignore-ssl-errors',
+            'sslProtocol'            => '--ssl-protocol',
+            'sslCertificatesPath'    => '--ssl-certificates-path',
+            'remoteDebuggerPort'     => '--remote-debugger-port',
+            'remoteDebuggerAutorun'  => '--remote-debugger-autorun',
+            'cookiesFile'            => '--cookies-file',
+            'diskCache'              => '--disk-cache',
+            'maxDiskCacheSize'       => '--max-disk-cache-size',
+            'loadImages'             => '--load-images',
+            'localStoragePath'       => '--local-storage-path',
+            'localStorageQuota'      => '--local-storage-quota',
             'localToRemoteUrlAccess' => '--local-to-remote-url-access',
-            'outputEncoding' => '--output-encoding',
-            'scriptEncoding' => '--script-encoding',
-            'webdriverLoglevel' => '--webdriver-loglevel',
-            'webdriverLogfile' => '--webdriver-logfile',
+            'outputEncoding'         => '--output-encoding',
+            'scriptEncoding'         => '--script-encoding',
+            'webdriverLoglevel'      => '--webdriver-loglevel',
+            'webdriverLogfile'       => '--webdriver-logfile',
         ];
 
         $params = [];
-        foreach ($this->config as $configKey => $configValue) {
-            if (!empty($mapping[$configKey])) {
-                if (is_bool($configValue)) {
+        foreach($this->config as $configKey => $configValue) {
+            if(!empty($mapping[$configKey])) {
+                if(is_bool($configValue)) {
                     // Make sure the value is true/false and not 1/0.
                     $configValue = $configValue ? 'true' : 'false';
                 }
-                $params[] = $mapping[$configKey] . '=' . $configValue;
+                $params[] = $mapping[$configKey].'='.$configValue;
             }
         }
 
@@ -271,39 +243,33 @@ class Phantoman extends Extension
      * @return string
      *   Command to execute.
      */
-    private function getCommand()
+    private function getCommand(): string
     {
         // Prefix command with exec on non Windows systems to ensure that we
         // receive the correct pid.
         // See http://php.net/manual/en/function.proc-get-status.php#93382
-        $commandPrefix = $this->isWindows() ? '' : 'exec ';
-        return $commandPrefix . escapeshellarg(realpath($this->config['path'])) . ' ' . $this->getCommandParameters();
-    }
+        if(strpos($this->config['path'], 'exe') !== false) {
+            $commandPrefix = '';
+        } else {
+            $commandPrefix = 'exec ';
+        }
 
-    /**
-     * Checks if the current machine is Windows.
-     *
-     * @return bool
-     *   True if the machine is windows.
-     */
-    private function isWindows()
-    {
-        return stripos(PHP_OS, 'WIN') === 0;
+        return $commandPrefix.escapeshellarg(realpath($this->config['path'])).' '.$this->getCommandParameters();
     }
 
     /**
      * Suite Init.
      *
-     * @param \Codeception\Event\SuiteEvent $e
+     * @param \Codeception\Event\SuiteEvent $event
      *   The event with suite, result and settings.
      *
      * @throws \Codeception\Exception\ExtensionException
      */
-    public function suiteInit(SuiteEvent $e)
+    public function suiteInit(SuiteEvent $event): void
     {
         // Check if PhantomJS should only be started for specific suites.
-        if (isset($this->config['suites'])) {
-            if (is_string($this->config['suites'])) {
+        if(isset($this->config['suites'])) {
+            if(is_string($this->config['suites'])) {
                 $suites = [$this->config['suites']];
             } else {
                 $suites = $this->config['suites'];
@@ -311,13 +277,22 @@ class Phantoman extends Extension
 
             // If the current suites aren't in the desired array, return without
             // starting PhantomJS.
-            if (!in_array($e->getSuite()->getBaseName(), $suites, true)
-                && !in_array($e->getSuite()->getName(), $suites, true)) {
+            if(!in_array($event->getSuite()->getBaseName(), $suites, true)
+                && !in_array($event->getSuite()->getName(), $suites, true)
+            ) {
                 return;
             }
         }
 
         // Start the PhantomJS server.
         $this->startServer();
+    }
+
+    /**
+     * @param \Codeception\Event\SuiteEvent $event
+     */
+    public function afterSuite(SuiteEvent $event): void
+    {
+        $this->stopServer();
     }
 }
