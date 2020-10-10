@@ -9,6 +9,7 @@ class Configurator implements ConfiguratorInterface
     public const DEFAULT_PATH = 'vendor/bin/phantomjs';
     public const DEFAULT_DEBUG = false;
     public const DEFAULT_PORT = 4444;
+    public const DEFAULT_SUITES = ['unit', 'functional', 'acceptance'];
 
     /**
      * @var string
@@ -31,6 +32,7 @@ class Configurator implements ConfiguratorInterface
         $config = $this->findExecutable($config);
         $config = $this->setDebug($config);
         $config = $this->setPort($config);
+        $config = $this->formatSuites($config);
 
 
         return $config;
@@ -91,6 +93,26 @@ class Configurator implements ConfiguratorInterface
             $config['port'] = static::DEFAULT_PORT;
         }
 
+        return $config;
+    }
+
+    /**
+     * @param array $config
+     *
+     * @return array
+     */
+    private function formatSuites(array $config): array
+    {
+        if(isset($config['suites'])) {
+            if(is_string($config['suites'])) {
+                $config['suites'] = [$config['suites']];
+                return $config;
+            }
+
+            return $config;
+        }
+
+        $config['suites'] = static::DEFAULT_SUITES;
         return $config;
     }
 }

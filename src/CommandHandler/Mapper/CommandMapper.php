@@ -9,29 +9,30 @@ class CommandMapper implements CommandMapperInterface
     /**
      * @var string[]
      */
-    private $mapping = [
-        'port'                   => '--webdriver',
-        'proxy'                  => '--proxy',
-        'proxyType'              => '--proxy-type',
-        'proxyAuth'              => '--proxy-auth',
-        'webSecurity'            => '--web-security',
-        'ignoreSslErrors'        => '--ignore-ssl-errors',
-        'sslProtocol'            => '--ssl-protocol',
-        'sslCertificatesPath'    => '--ssl-certificates-path',
-        'remoteDebuggerPort'     => '--remote-debugger-port',
-        'remoteDebuggerAutorun'  => '--remote-debugger-autorun',
-        'cookiesFile'            => '--cookies-file',
-        'diskCache'              => '--disk-cache',
-        'maxDiskCacheSize'       => '--max-disk-cache-size',
-        'loadImages'             => '--load-images',
-        'localStoragePath'       => '--local-storage-path',
-        'localStorageQuota'      => '--local-storage-quota',
-        'localToRemoteUrlAccess' => '--local-to-remote-url-access',
-        'outputEncoding'         => '--output-encoding',
-        'scriptEncoding'         => '--script-encoding',
-        'webdriverLoglevel'      => '--webdriver-loglevel',
-        'webdriverLogfile'       => '--webdriver-logfile',
-    ];
+    private array $mapping
+        = [
+            'port'                   => '--webdriver',
+            'proxy'                  => '--proxy',
+            'proxyType'              => '--proxy-type',
+            'proxyAuth'              => '--proxy-auth',
+            'webSecurity'            => '--web-security',
+            'ignoreSslErrors'        => '--ignore-ssl-errors',
+            'sslProtocol'            => '--ssl-protocol',
+            'sslCertificatesPath'    => '--ssl-certificates-path',
+            'remoteDebuggerPort'     => '--remote-debugger-port',
+            'remoteDebuggerAutorun'  => '--remote-debugger-autorun',
+            'cookiesFile'            => '--cookies-file',
+            'diskCache'              => '--disk-cache',
+            'maxDiskCacheSize'       => '--max-disk-cache-size',
+            'loadImages'             => '--load-images',
+            'localStoragePath'       => '--local-storage-path',
+            'localStorageQuota'      => '--local-storage-quota',
+            'localToRemoteUrlAccess' => '--local-to-remote-url-access',
+            'outputEncoding'         => '--output-encoding',
+            'scriptEncoding'         => '--script-encoding',
+            'webdriverLoglevel'      => '--webdriver-loglevel',
+            'webdriverLogfile'       => '--webdriver-logfile',
+        ];
 
     /**
      * @inheritDoc

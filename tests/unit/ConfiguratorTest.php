@@ -32,6 +32,7 @@ class ConfiguratorTest extends Unit
             'path' => static::FILE_NAME,
             'debug' => true,
             'port' => 1234,
+            'suites' => ['testing'],
         ];
 
         $result = $configurator->configureExtension($input);
@@ -41,6 +42,7 @@ class ConfiguratorTest extends Unit
         self::assertSame($input['path'], $result['path']);
         self::assertSame($input['debug'], $result['debug']);
         self::assertSame($input['port'], $result['port']);
+        self::assertSame($input['suites'], $result['suites']);
     }
 
     public function testConfigureExtensionWithoutParams(): void
@@ -55,6 +57,7 @@ class ConfiguratorTest extends Unit
         self::assertSame(Configurator::DEFAULT_PATH, $result['path']);
         self::assertSame(Configurator::DEFAULT_DEBUG, $result['debug']);
         self::assertSame(Configurator::DEFAULT_PORT, $result['port']);
+        self::assertSame(Configurator::DEFAULT_SUITES, $result['suites']);
     }
 
     public function testConfigureExtensionWithPath(): void
@@ -71,6 +74,7 @@ class ConfiguratorTest extends Unit
         self::assertSame($input['path'], $result['path']);
         self::assertSame(Configurator::DEFAULT_DEBUG, $result['debug']);
         self::assertSame(Configurator::DEFAULT_PORT, $result['port']);
+        self::assertSame(Configurator::DEFAULT_SUITES, $result['suites']);
     }
 
     public function testConfigureExtensionWithWindowsPath(): void
@@ -89,6 +93,7 @@ class ConfiguratorTest extends Unit
         self::assertSame("{$input['path']}.exe", $result['path']);
         self::assertSame(Configurator::DEFAULT_DEBUG, $result['debug']);
         self::assertSame(Configurator::DEFAULT_PORT, $result['port']);
+        self::assertSame(Configurator::DEFAULT_SUITES, $result['suites']);
 
         unlink(static::FILE_EXE_NAME);
     }
@@ -109,6 +114,7 @@ class ConfiguratorTest extends Unit
         self::assertSame($input['path'], $result['path']);
         self::assertSame(Configurator::DEFAULT_DEBUG, $result['debug']);
         self::assertSame(Configurator::DEFAULT_PORT, $result['port']);
+        self::assertSame(Configurator::DEFAULT_SUITES, $result['suites']);
 
         unlink(static::FILE_EXE_NAME);
     }
@@ -127,6 +133,7 @@ class ConfiguratorTest extends Unit
         self::assertSame(Configurator::DEFAULT_PATH, $result['path']);
         self::assertSame($input['debug'], $result['debug']);
         self::assertSame(Configurator::DEFAULT_PORT, $result['port']);
+        self::assertSame(Configurator::DEFAULT_SUITES, $result['suites']);
     }
 
     public function testConfigureExtensionWithPort(): void
@@ -143,5 +150,42 @@ class ConfiguratorTest extends Unit
         self::assertSame(Configurator::DEFAULT_PATH, $result['path']);
         self::assertSame(Configurator::DEFAULT_DEBUG, $result['debug']);
         self::assertSame($input['port'], $result['port']);
+        self::assertSame(Configurator::DEFAULT_SUITES, $result['suites']);
+    }
+
+    public function testConfigureExtensionWithSuites(): void
+    {
+        $configurator = new Configurator('Linux');
+
+        $input = [
+            'suites' => ['test'],
+        ];
+
+        $result = $configurator->configureExtension($input);
+
+        self::assertIsArray($result);
+        self::assertSame(Configurator::DEFAULT_PATH, $result['path']);
+        self::assertSame(Configurator::DEFAULT_DEBUG, $result['debug']);
+        self::assertSame(Configurator::DEFAULT_PORT, $result['port']);
+        self::assertSame($input['suites'], $result['suites']);
+    }
+
+    public function testConfigureExtensionWithSuitesString(): void
+    {
+        $configurator = new Configurator('Linux');
+
+        $input = [
+            'suites' => 'test',
+        ];
+
+        $result = $configurator->configureExtension($input);
+
+        self::assertIsArray($result);
+        self::assertSame(Configurator::DEFAULT_PATH, $result['path']);
+        self::assertSame(Configurator::DEFAULT_DEBUG, $result['debug']);
+        self::assertSame(Configurator::DEFAULT_PORT, $result['port']);
+        self::assertIsArray($result['suites']);
+        self::assertNotSame($input['suites'], $result['suites']);
+        self::assertSame([$input['suites']], $result['suites']);
     }
 }

@@ -24,7 +24,8 @@
         "codeception/codeception": "^4"
     },
     "require-dev": {
-        "codeception/module-asserts": "^1.0.0"
+        "codeception/module-asserts": "^1.0.0",
+        "codeception/assert-throws": "^1.1"
     },
     "autoload": {
         "psr-4": {

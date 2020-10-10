@@ -35,9 +35,9 @@ class Phantoman extends Extension
         ];
 
     /**
-     * @var \Codeception\Extension\PhantomanFactory
+     * @var \Codeception\Extension\PhantomanFactoryInterface
      */
-    private PhantomanFactory $factory;
+    private PhantomanFactoryInterface $factory;
 
     /**
      * @var \Codeception\Extension\PhantomJsServer\PhantomJsServerInterface
@@ -51,8 +51,9 @@ class Phantoman extends Extension
      *   Current extension configuration.
      * @param array $options
      *   Passed running options.
+     * @param null $factory
      */
-    public function __construct(array $config, array $options)
+    public function __construct(array $config, array $options, $factory = null)
     {
         // Codeception has an option called silent, which suppresses the console
         // output. Unfortunately there is no builtin way to activate this mode for
@@ -64,10 +65,14 @@ class Phantoman extends Extension
         }
 
         $this->factory = new PhantomanFactory();
+        if($factory instanceof PhantomanFactoryInterface) {
+            $this->factory = $factory;
+        }
 
         parent::__construct($config, $options);
 
         $this->config = $this->factory->createConfigurator()->configureExtension($this->config);
+        $this->server = $this->factory->createPhantomJsServer();
     }
 
     /**
@@ -81,8 +86,6 @@ class Phantoman extends Extension
         if(!$this->isSuiteApplicable($event)) {
             return;
         }
-
-        $this->server = $this->factory->createPhantomJsServer();
 
         if($this->server->isRunning()) {
             return;
@@ -143,20 +146,7 @@ class Phantoman extends Extension
      */
     private function isSuiteApplicable(SuiteEvent $event): bool
     {
-        if(isset($this->config['suites'])) {
-            if(is_string($this->config['suites'])) {
-                $suites = [$this->config['suites']];
-            } else {
-                $suites = $this->config['suites'];
-            }
-
-            if(!in_array($event->getSuite()->getBaseName(), $suites, true)
-                && !in_array($event->getSuite()->getName(), $suites, true)
-            ) {
-                return false;
-            }
-        }
-
-        return true;
+        return (in_array($event->getSuite()->getBaseName(), $this->config['suites'], true)
+            && in_array($event->getSuite()->getName(), $this->config['suites'], true));
     }
 }

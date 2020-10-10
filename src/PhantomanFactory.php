@@ -11,10 +11,10 @@ use Codeception\Extension\Configurator\ConfiguratorInterface;
 use Codeception\Extension\PhantomJsServer\PhantomJsServer;
 use Codeception\Extension\PhantomJsServer\PhantomJsServerInterface;
 
-class PhantomanFactory
+class PhantomanFactory implements PhantomanFactoryInterface
 {
     /**
-     * @return \Codeception\Extension\Configurator\ConfiguratorInterface
+     * @inheritDoc
      */
     public function createConfigurator(): ConfiguratorInterface
     {
@@ -22,7 +22,7 @@ class PhantomanFactory
     }
 
     /**
-     * @return \Codeception\Extension\CommandHandler\CommandHandlerInterface
+     * @inheritDoc
      */
     public function createCommandHandler(): CommandHandlerInterface
     {
@@ -30,7 +30,7 @@ class PhantomanFactory
     }
 
     /**
-     * @return \Codeception\Extension\CommandHandler\Mapper\CommandMapperInterface
+     * @inheritDoc
      */
     public function createCommandMapper(): CommandMapperInterface
     {
@@ -38,7 +38,7 @@ class PhantomanFactory
     }
 
     /**
-     * @return \Codeception\Extension\PhantomJsServer\PhantomJsServerInterface
+     * @inheritDoc
      */
     public function createPhantomJsServer(): PhantomJsServerInterface
     {

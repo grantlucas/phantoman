@@ -67,7 +67,6 @@ class PhantomJsServer implements PhantomJsServerInterface
             sleep(1);
         }
 
-        unset($this->resource);
         $this->resource = null;
 
         $this->closePipes();
