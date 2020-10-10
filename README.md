@@ -4,14 +4,13 @@
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 [![Total Downloads](https://img.shields.io/packagist/dt/site5/phantoman.svg?style=flat-square)](https://packagist.org/packages/site5/phantoman)
 
-
 The [Codeception](http://codeception.com/) extension for automatically starting
 and stopping [PhantomJS](http://phantomjs.org/) when running tests.
 
 ## Minimum Requirements
 
-- Codeception 2.2.7
-- PHP 5.4
+- Codeception 4.x
+- PHP 7.4
 
 ## Installation using [Composer](https://getcomposer.org)
 
