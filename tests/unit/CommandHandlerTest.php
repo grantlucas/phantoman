@@ -23,7 +23,7 @@ class CommandHandlerTest extends Unit
 
         $command = $commandHandler->getCommand($config);
 
-        self::assertSame('exec \'/home/phy/xProjects/phantoman/vendor/bin/phantomjs\' --webdriver=4444', $command);
+        self::assertSame('exec \'' . realpath(Configurator::DEFAULT_PATH) . '\' --webdriver=4444', $command);
         unlink(Configurator::DEFAULT_PATH);
     }
 
@@ -41,7 +41,7 @@ class CommandHandlerTest extends Unit
 
         $command = $commandHandler->getCommand($config);
 
-        self::assertSame('\'/home/phy/xProjects/phantoman/vendor/bin/phantomjs.exe\' --webdriver=4444', $command);
+        self::assertSame('\'' . realpath(Configurator::DEFAULT_PATH . '.exe') . '\' --webdriver=4444', $command);
         unlink(Configurator::DEFAULT_PATH.'.exe');
     }
 }
