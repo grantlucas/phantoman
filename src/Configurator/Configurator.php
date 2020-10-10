@@ -2,9 +2,7 @@
 
 namespace Codeception\Extension\Configurator;
 
-
 use Codeception\Exception\ExtensionException;
-use Symfony\Component\DomCrawler\Field\InputFormField;
 
 class Configurator implements ConfiguratorInterface
 {
@@ -37,7 +35,7 @@ class Configurator implements ConfiguratorInterface
         }
 
         if(!file_exists(realpath($path))) {
-            throw new ExtensionException($this, "PhantomJS executable not found: {$this->config['path']}");
+            throw new ExtensionException($this, "PhantomJS executable not found: {$path}");
         }
 
         return $path;
@@ -54,14 +52,14 @@ class Configurator implements ConfiguratorInterface
     }
 
     /**
-     * @param array $debug
+     * @param bool $debug
      *
-     * @return array
+     * @return bool
      */
-    private function setDebug(string $debug): array
+    private function setDebug(bool $debug): bool
     {
-        if(!isset($debug['debug'])) {
-            $debug['debug'] = false;
+        if(empty($debug)) {
+            return false;
         }
 
         return $debug;
