@@ -6,72 +6,91 @@ use Codeception\Exception\ExtensionException;
 
 class Configurator implements ConfiguratorInterface
 {
+    public const DEFAULT_PATH = 'vendor/bin/phantomjs';
+    public const DEFAULT_DEBUG = false;
+    public const DEFAULT_PORT = 4444;
+
+    /**
+     * @var string
+     */
+    private string $os;
+
+    /**
+     * @param string $os
+     */
+    public function __construct(string $os)
+    {
+        $this->os = $os;
+    }
+
     /**
      * @inheritDoc
      */
     public function configureExtension(array $config): array
     {
-        $config['path'] = $this->findExecutable($config['path']);
-        $config['debug'] = $this->setDebug($config['debug']);
-        $config['port'] = $this->setPort($config['port']);
+        $config = $this->findExecutable($config);
+        $config = $this->setDebug($config);
+        $config = $this->setPort($config);
 
 
         return $config;
     }
 
     /**
-     * @param string $path
+     * @param array $config
      *
-     * @return string
+     * @return array
      */
-    private function findExecutable(string $path = ''): string
+    private function findExecutable(array $config): array
     {
-        if($this->isWindows() && file_exists(realpath($path.'.exe'))) {
-            $path .= '.exe';
+        if($this->isWindows() && strpos($config['path'], '.exe') === false && file_exists(realpath($config['path'].'.exe'))) {
+            $config['path'] .= '.exe';
         }
 
-        if(empty($path)) {
-            $path = 'vendor/bin/phantomjs';
+        if(!isset($config['path']) || empty($config['path'])) {
+            $config['path'] = static::DEFAULT_PATH;
         }
 
-        if(!file_exists(realpath($path))) {
-            throw new ExtensionException($this, "PhantomJS executable not found: {$path}");
+        if(!file_exists(realpath($config['path']))) {
+            throw new ExtensionException($this, "PhantomJS executable not found: {$config['path']}");
         }
 
-        return $path;
+        return $config;
     }
 
     /**
-     * Checks if the current machine is Windows.
-     *
      * @return bool
      */
     private function isWindows(): bool
     {
-        return stripos(PHP_OS_FAMILY, 'WIN') === 0;
+        return strpos($this->os, 'WIN') !== false;
     }
 
     /**
-     * @param bool $debug
+     * @param array $config
      *
-     * @return bool
+     * @return array
      */
-    private function setDebug(bool $debug): bool
+    private function setDebug(array $config): array
     {
-        if(empty($debug)) {
-            return false;
+        if(!isset($config['debug']) || empty($config['debug'])) {
+            $config['debug'] = static::DEFAULT_DEBUG;
         }
 
-        return $debug;
+        return $config;
     }
 
-    private function setPort(int $port): int
+    /**
+     * @param array $config
+     *
+     * @return array
+     */
+    private function setPort(array $config): array
     {
-        // Set default WebDriver port.
-        if(!isset($port)) {
-            $port = 4444;
+        if(!isset($config['port'])) {
+            $config['port'] = static::DEFAULT_PORT;
         }
 
-        return $port;
+        return $config;
     }
 }

@@ -14,6 +14,6 @@ class PhantomanFactory
      */
     public function createConfigurator(): ConfiguratorInterface
     {
-        return new Configurator();
+        return new Configurator(PHP_OS_FAMILY);
     }
 }
