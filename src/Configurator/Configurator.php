@@ -29,11 +29,13 @@ class Configurator implements ConfiguratorInterface
      */
     public function configureExtension(array $config): array
     {
+        codecept_debug('Configuration started.');
         $config = $this->findExecutable($config);
         $config = $this->setDebug($config);
         $config = $this->setPort($config);
         $config = $this->formatSuites($config);
 
+        codecept_debug('Configuration done.');
 
         return $config;
     }
@@ -57,6 +59,7 @@ class Configurator implements ConfiguratorInterface
             throw new ExtensionException($this, "PhantomJS executable not found: {$config['path']}");
         }
 
+        codecept_debug("Path is {$config['path']}");
         return $config;
     }
 
@@ -79,6 +82,7 @@ class Configurator implements ConfiguratorInterface
             $config['debug'] = static::DEFAULT_DEBUG;
         }
 
+        codecept_debug(sprintf('Debug is set to %b', $config['debug']));
         return $config;
     }
 
@@ -93,6 +97,7 @@ class Configurator implements ConfiguratorInterface
             $config['port'] = static::DEFAULT_PORT;
         }
 
+        codecept_debug("Port is {$config['port']}");
         return $config;
     }
 
@@ -106,13 +111,16 @@ class Configurator implements ConfiguratorInterface
         if(isset($config['suites'])) {
             if(is_string($config['suites'])) {
                 $config['suites'] = [$config['suites']];
+                codecept_debug(sprintf('Suites is %s', implode(', ', $config['suites'])));
                 return $config;
             }
 
+            codecept_debug(sprintf('Suites is %s', implode(', ', $config['suites'])));
             return $config;
         }
 
         $config['suites'] = static::DEFAULT_SUITES;
+        codecept_debug(sprintf('Suites is %s', implode(', ', $config['suites'])));
         return $config;
     }
 }

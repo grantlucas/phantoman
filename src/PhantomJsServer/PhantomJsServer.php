@@ -10,7 +10,7 @@ class PhantomJsServer implements PhantomJsServerInterface
     /**
      * @var resource|null
      */
-    private $resource = null;
+    private $resource;
 
     /**
      * File pointers that correspond to PHP's end of any pipes that are created.
@@ -78,7 +78,6 @@ class PhantomJsServer implements PhantomJsServerInterface
      * @param int $port
      *
      * @return bool
-     * @throws \Codeception\Exception\ExtensionException
      */
     public function waitUntilServerIsUp(int $port): bool
     {
