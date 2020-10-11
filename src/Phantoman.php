@@ -81,7 +81,7 @@ class Phantoman extends Extension
 
         codecept_debug('Starting PhantomJS Server.');
 
-        $this->server->startServer($command, $this->config['path'], $descriptorSpec);
+        $this->server->startServer($command, $descriptorSpec);
 
         codecept_debug('Waiting for the PhantomJS server to be reachable.');
 

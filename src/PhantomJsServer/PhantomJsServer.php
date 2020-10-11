@@ -19,13 +19,16 @@ class PhantomJsServer implements PhantomJsServerInterface
      */
     private array $pipes;
 
+    /**
+     * @inheritDoc
+     */
     public function getRessource()
     {
         return $this->resource;
     }
 
     /**
-     * @return bool
+     * @inheritDoc
      */
     public function isRunning(): bool
     {
@@ -33,11 +36,9 @@ class PhantomJsServer implements PhantomJsServerInterface
     }
 
     /**
-     * @param string $command
-     * @param string $path
-     * @param array $descriptorSpec
+     * @inheritDoc
      */
-    public function startServer(string $command, string $path, array $descriptorSpec): void
+    public function startServer(string $command, array $descriptorSpec): void
     {
         $this->resource = proc_open($command, $descriptorSpec, $this->pipes, null, null, ['bypass_shell' => true]);
 
@@ -48,7 +49,7 @@ class PhantomJsServer implements PhantomJsServerInterface
     }
 
     /**
-     * @return bool
+     * @inheritDoc
      */
     public function stopServer(): bool
     {
@@ -75,9 +76,7 @@ class PhantomJsServer implements PhantomJsServerInterface
     }
 
     /**
-     * @param int $port
-     *
-     * @return bool
+     * @inheritDoc
      */
     public function waitUntilServerIsUp(int $port): bool
     {
