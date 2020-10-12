@@ -17,7 +17,7 @@ class PhantomJsServer implements PhantomJsServerInterface
      *
      * @var array
      */
-    private array $pipes;
+    private array $pipes = [];
 
     /**
      * @inheritDoc
