@@ -16,7 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-          "Codeception\\Extension\\": "src/"
+            "Codeception\\Extension\\": "src/"
         }
     },
     "suggest": {
