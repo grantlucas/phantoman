@@ -2,23 +2,19 @@
 
 namespace Codeception\Extension;
 
-/**
- * Phantoman.
- *
- * The Codeception extension for automatically starting and stopping PhantomJS
- * when running tests.
- *
- * Originally based off of PhpBuiltinServer Codeception extension
- * https://github.com/tiger-seo/PhpBuiltinServer
- */
-
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
 use Codeception\Exception\ExtensionException;
 use Codeception\Extension;
 
 /**
- * Class Phantoman.
+ * Phantoman
+ *
+ * The Codeception extension for automatically starting and stopping PhantomJS
+ * when running tests.
+ *
+ * Originally based off of PhpBuiltinServer Codeception extension
+ * https://github.com/tiger-seo/PhpBuiltinServer
  *
  * @package Codeception\Extension
  */
@@ -311,8 +307,10 @@ class Phantoman extends Extension
 
             // If the current suites aren't in the desired array, return without
             // starting PhantomJS.
-            if (!in_array($e->getSuite()->getBaseName(), $suites, true)
-                && !in_array($e->getSuite()->getName(), $suites, true)) {
+            if (
+                !in_array($e->getSuite()->getBaseName(), $suites, true)
+                && !in_array($e->getSuite()->getName(), $suites, true)
+            ) {
                 return;
             }
         }

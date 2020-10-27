@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<ruleset name="Phantoman Standard">
+    <!-- @see https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-Ruleset -->
+    <arg name="colors"/>
+    <arg value="sp"/>
+
+    <rule ref="PSR1" />
+
+    <rule ref="PSR12" />
+
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
+        <properties>
+            <property name="ignoreBlankLines" value="false"/>
+        </properties>
+    </rule>
+
+    <rule ref="Squiz.WhiteSpace.FunctionOpeningBraceSpace" />
+
+    <rule ref="Squiz.Strings.ConcatenationSpacing">
+        <properties>
+            <property name="spacing" value="1" />
+            <property name="ignoreNewlines" value="true" />
+        </properties>
+    </rule>
+
+    <!-- Dissallow assignments in conditions -->
+    <rule ref="Generic.CodeAnalysis.AssignmentInCondition">
+        <exclude name="Generic.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition"/>
+    </rule>
+
+
+    <file>src</file>
+</ruleset>
