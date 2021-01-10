@@ -49,6 +49,22 @@ class Phantoman extends Extension
     }
 
     /**
+     * Phantoman constructor.
+     *
+     * @param array $config
+     * @param array $options
+     * @param \Codeception\Extension\PhantomanFactoryInterface|null $factory
+     */
+    public function __construct(array $config, array $options, $factory=null)
+    {
+        if($factory instanceof PhantomanFactoryInterface) {
+            $this->factory = $factory;
+        }
+
+        parent::__construct($config, $options);
+    }
+
+    /**
      * Suite Init.
      *
      * @param \Codeception\Event\SuiteEvent $event
