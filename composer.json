@@ -23,7 +23,7 @@
         "tests": "vendor/bin/codecept build && vendor/bin/codecept run"
     },
     "require": {
-        "php": ">=7.4",
+        "php": ">=7.2",
         "codeception/codeception": "^4"
     },
     "require-dev": {

@@ -17,7 +17,7 @@ class PhantomJsServer implements PhantomJsServerInterface
      *
      * @var array
      */
-    private array $pipes = [];
+    private $pipes = [];
 
     /**
      * @inheritDoc
@@ -90,6 +90,7 @@ class PhantomJsServer implements PhantomJsServerInterface
             }
             $fp = @fsockopen('127.0.0.1', $port, $errCode, $errStr, 10);
             $checks++;
+            codecept_debug('Waiting...');
             sleep(1);
         }
 

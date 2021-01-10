@@ -28,7 +28,7 @@ class Phantoman extends Extension
      *
      * @var array
      */
-    protected static array $events
+    protected static $events
         = [
             Events::SUITE_BEFORE => 'suiteInit',
             Events::SUITE_AFTER  => 'afterSuite',
@@ -37,12 +37,12 @@ class Phantoman extends Extension
     /**
      * @var \Codeception\Extension\PhantomanFactoryInterface
      */
-    private PhantomanFactoryInterface $factory;
+    private $factory;
 
     /**
      * @var \Codeception\Extension\PhantomJsServer\PhantomJsServerInterface
      */
-    private PhantomJsServer\PhantomJsServerInterface $server;
+    private $server;
 
     public function _initialize(): void
     {
