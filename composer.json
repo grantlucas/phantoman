@@ -28,7 +28,9 @@
     },
     "require-dev": {
         "codeception/module-asserts": "^1.0.0",
-        "codeception/assert-throws": "^1.1"
+        "codeception/assert-throws": "^1.1",
+        "phan/phan": "^3.2",
+        "squizlabs/php_codesniffer": "^3.5"
     },
     "autoload": {
         "psr-4": {

@@ -1,3 +1,14 @@
+# Composer
 /vendor/
+
+# Environment Configs
+.env
+
+# System Files
+.DS_Store
+Thumbs.db
 .idea/
 .vscode/
+
+# ctags files
+tags

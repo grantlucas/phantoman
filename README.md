@@ -174,3 +174,10 @@ Once the tests are complete, PhantomJS will be shut down.
 ```bash
 Stopping PhantomJS Server.
 ```
+
+## Contributing
+
+This repository makes use of [EditorConfig](https://editorconfig.org/) to ensure
+code style consistency across editors. Please be sure to either have an
+EditorConfig plugin installed for your desire editor or ensure that all
+indenting is 4 space indenting with linux line endings.
