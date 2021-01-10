@@ -9,7 +9,7 @@ class CommandMapper implements CommandMapperInterface
     /**
      * @var string[]
      */
-    private array $mapping
+    private $mapping
         = [
             'port'                   => '--webdriver',
             'proxy'                  => '--proxy',

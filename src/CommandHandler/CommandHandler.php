@@ -9,7 +9,7 @@ class CommandHandler implements CommandHandlerInterface
     /**
      * @var \Codeception\Extension\CommandHandler\Mapper\CommandMapperInterface
      */
-    private CommandMapperInterface $commandMapper;
+    private $commandMapper;
 
     /**
      * @param \Codeception\Extension\CommandHandler\Mapper\CommandMapperInterface $commandMapper
@@ -20,11 +20,7 @@ class CommandHandler implements CommandHandlerInterface
     }
 
     /**
-     * Get PhantomJS command.
-     *
-     * @param array $config
-     *
-     * @return string
+     * @inheritDoc
      */
     public function getCommand(array $config): string
     {

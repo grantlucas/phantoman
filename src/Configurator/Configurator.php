@@ -14,7 +14,7 @@ class Configurator implements ConfiguratorInterface
     /**
      * @var string
      */
-    private string $os;
+    private $os;
 
     /**
      * @param string $os
