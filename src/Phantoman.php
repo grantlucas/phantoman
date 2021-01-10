@@ -2,6 +2,10 @@
 
 namespace Codeception\Extension;
 
+use Codeception\Event\SuiteEvent;
+use Codeception\Events;
+use Codeception\Extension;
+
 /**
  * Phantoman.
  *
@@ -10,14 +14,6 @@ namespace Codeception\Extension;
  *
  * Originally based off of PhpBuiltinServer Codeception extension
  * https://github.com/tiger-seo/PhpBuiltinServer
- */
-
-use Codeception\Event\SuiteEvent;
-use Codeception\Events;
-use Codeception\Extension;
-
-/**
- * Class Phantoman.
  *
  * @package Codeception\Extension
  */
